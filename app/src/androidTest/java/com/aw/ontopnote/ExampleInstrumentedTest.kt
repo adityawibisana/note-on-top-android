@@ -1,4 +1,4 @@
-package com.example.ontopnote
+package com.aw.ontopnote
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.example.ontopnote", appContext.packageName)
+        assertEquals("com.aw.ontopnote", appContext.packageName)
     }
 }

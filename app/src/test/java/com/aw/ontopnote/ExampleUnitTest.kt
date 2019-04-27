@@ -1,4 +1,4 @@
-package com.example.ontopnote
+package com.aw.ontopnote
 
 import org.junit.Test
 

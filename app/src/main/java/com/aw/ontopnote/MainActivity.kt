@@ -1,4 +1,4 @@
-package com.example.ontopnote
+package com.aw.ontopnote
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
