@@ -4,7 +4,10 @@ import android.content.Context
 import android.view.ContextThemeWrapper
 import android.widget.*
 import androidx.core.view.setMargins
-
+import com.aw.ontopnote.model.event.FirstNoteEvent
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.ThreadMode
+import org.greenrobot.eventbus.Subscribe
 
 class MainView(context: Context) : LinearLayout(context) {
 
@@ -26,6 +29,13 @@ class MainView(context: Context) : LinearLayout(context) {
         orientation = LinearLayout.VERTICAL
 
         addView(textToShow)
+
+        EventBus.getDefault().register(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: FirstNoteEvent) {
+        textToShow.text = event.content
     }
 
 }

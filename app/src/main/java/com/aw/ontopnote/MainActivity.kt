@@ -11,6 +11,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import kotlinx.android.synthetic.main.activity_main.*
 import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.model.event.FirstNoteEvent
+import org.greenrobot.eventbus.EventBus
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +39,8 @@ class MainActivity : AppCompatActivity() {
                     val firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
                     firstNote.content = s.toString()
                     NoteRepository.updateNote(applicationContext, firstNote)
+
+                    EventBus.getDefault().post(FirstNoteEvent(firstNote.content))
                 })
             }
 
