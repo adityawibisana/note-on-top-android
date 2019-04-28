@@ -10,5 +10,5 @@ data class Note (
     @PrimaryKey @ColumnInfo(name = "id")
     val id:String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "content")
-    val content: String
+    var content: String
 )

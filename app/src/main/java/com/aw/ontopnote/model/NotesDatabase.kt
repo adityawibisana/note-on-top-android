@@ -1,6 +1,5 @@
 package com.aw.ontopnote.model
 
-
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
