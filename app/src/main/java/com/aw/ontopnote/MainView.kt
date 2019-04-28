@@ -24,7 +24,6 @@ class MainView(context: Context) : LinearLayout(context) {
         layoutParams.leftMargin = 0
 
         textToShow.layoutParams = layoutParams
-        textToShow.text = "Beli tiket Avengers Endgame"
 
         orientation = LinearLayout.VERTICAL
 
