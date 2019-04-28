@@ -28,7 +28,7 @@ interface NoteDao {
     fun count(): Int
 
     @Query("SELECT * FROM notes LIMIT 1")
-    fun getFirstNote(): LiveData<Note>
+    fun getFirstNote(): Note
 
     @Update
     fun update(note: Note)
