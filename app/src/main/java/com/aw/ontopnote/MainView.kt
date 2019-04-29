@@ -2,6 +2,7 @@ package com.aw.ontopnote
 
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.content.Intent
 import android.view.ContextThemeWrapper
 import android.widget.*
 import androidx.core.view.setMargins
@@ -38,6 +39,11 @@ class MainView(context: Context) : LinearLayout(context) {
 
             if (isDoubleClick(System.currentTimeMillis() ,lastClickTimeStamp)) {
                 Log.v(TAG, "Double Clicked")
+
+                val mainActivityIntent = Intent(context, MainActivity::class.java)
+                mainActivityIntent.addCategory(Intent.CATEGORY_HOME)
+                mainActivityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                context.startActivity(mainActivityIntent)
             } else {
                 Log.v(TAG, "Clicked")
             }
