@@ -14,7 +14,7 @@ import android.util.Log
 class MainView(context: Context) : LinearLayout(context) {
 
     private var textToShow: TextView = TextView(ContextThemeWrapper(context, R.style.DefaultText), null , 0)
-    private var isExpanded = false
+    private var isExpanded = true
     private var lastClickTimeStamp = 0.toLong()
 
     companion object {
@@ -34,14 +34,7 @@ class MainView(context: Context) : LinearLayout(context) {
         addView(textToShow)
 
         textToShow.setOnClickListener {
-
-            val targetX = if (isExpanded) 0.0f else -0.8f
-            isExpanded = !isExpanded
-
-            ObjectAnimator.ofFloat(textToShow, "translationX", textToShow.width * targetX).apply {
-                duration = 300
-                start()
-            }
+            switchTextToShowPosition()
 
             if (isDoubleClick(System.currentTimeMillis() ,lastClickTimeStamp)) {
                 Log.v(TAG, "Double Clicked")
@@ -57,8 +50,22 @@ class MainView(context: Context) : LinearLayout(context) {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: FirstNoteEvent) {
         textToShow.text = event.content
+
+        if (!isExpanded) {
+            switchTextToShowPosition()
+        }
     }
 
     private fun isDoubleClick(new: Long, old: Long) = new - old < 300
+
+    private fun switchTextToShowPosition() {
+        val targetX = if (isExpanded) -0.8f else 0.0f
+        isExpanded = !isExpanded
+
+        ObjectAnimator.ofFloat(textToShow, "translationX", textToShow.width * targetX).apply {
+            duration = 300
+            start()
+        }
+    }
 
 }
