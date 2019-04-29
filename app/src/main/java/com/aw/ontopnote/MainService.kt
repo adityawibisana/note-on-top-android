@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.IBinder
 import android.view.Gravity
 import android.view.WindowManager
+import android.widget.LinearLayout
 
 class MainService : Service() {
 
@@ -24,19 +25,21 @@ class MainService : Service() {
         val layoutFlag = if (Build.VERSION.SDK_INT >= 26) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE
 
         mLayoutParams = WindowManager.LayoutParams(
-            layoutFlag,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                    or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
-                    or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+              WindowManager.LayoutParams.WRAP_CONTENT,
+              WindowManager.LayoutParams.WRAP_CONTENT,
+              layoutFlag,
+              WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+                      or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                      or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         )
 
         mLayoutParams.gravity = Gravity.TOP or Gravity.START
-        mLayoutParams.setTitle("Load Average")
 
         if (!this::mWindowManager.isInitialized) {
             mWindowManager = (getSystemService( Context.WINDOW_SERVICE) as WindowManager)
-            mView = MainView(this)
+            mView = MainView(applicationContext)
 
             mWindowManager.addView(this.mView, mLayoutParams)
         }
