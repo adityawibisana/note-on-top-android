@@ -3,18 +3,20 @@ package com.aw.ontopnote
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
-import android.view.ContextThemeWrapper
 import android.widget.*
-import androidx.core.view.setMargins
 import com.aw.ontopnote.model.event.FirstNoteEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.ThreadMode
 import org.greenrobot.eventbus.Subscribe
 import android.util.Log
+import android.view.View
+import android.view.LayoutInflater
+import kotlinx.android.synthetic.main.view_main.view.*
 
-class MainView(context: Context) : LinearLayout(context) {
 
-    private var textToShow: TextView = TextView(ContextThemeWrapper(context, R.style.DefaultText), null , 0)
+class MainView(context: Context) : RelativeLayout(context) {
+
+
     private var isExpanded = true
     private var lastClickTimeStamp = 0.toLong()
 
@@ -23,18 +25,9 @@ class MainView(context: Context) : LinearLayout(context) {
     }
 
     init {
-        val margin = 8
-        val layoutParams = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        layoutParams.setMargins(margin)
-        layoutParams.leftMargin = 0
+        (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_main, this)
 
-        textToShow.layoutParams = layoutParams
-
-        orientation = LinearLayout.VERTICAL
-
-        addView(textToShow)
-
-        textToShow.setOnClickListener {
+        text_to_show.setOnClickListener {
             switchTextToShowPosition()
 
             if (isDoubleClick(System.currentTimeMillis() ,lastClickTimeStamp)) {
@@ -55,7 +48,7 @@ class MainView(context: Context) : LinearLayout(context) {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: FirstNoteEvent) {
-        textToShow.text = event.content
+        text_to_show.text = event.content
 
         if (!isExpanded) {
             switchTextToShowPosition()
@@ -68,7 +61,7 @@ class MainView(context: Context) : LinearLayout(context) {
         val targetX = if (isExpanded) -0.8f else 0.0f
         isExpanded = !isExpanded
 
-        ObjectAnimator.ofFloat(textToShow, "translationX", textToShow.width * targetX).apply {
+        ObjectAnimator.ofFloat(text_to_show, "translationX", text_to_show.width * targetX).apply {
             duration = 300
             start()
         }
