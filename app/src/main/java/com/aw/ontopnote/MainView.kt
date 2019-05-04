@@ -4,7 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.widget.*
-import com.aw.ontopnote.model.event.FirstNoteEvent
+import com.aw.ontopnote.model.event.UpdateNoteEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.ThreadMode
 import org.greenrobot.eventbus.Subscribe
@@ -46,7 +46,7 @@ class MainView(context: Context) : RelativeLayout(context) {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: FirstNoteEvent) {
+    fun onMessageEvent(event: UpdateNoteEvent) {
         text_to_show.text = event.note.content
         text_to_show.setBackgroundColor(event.note.color)
 

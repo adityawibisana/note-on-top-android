@@ -1,7 +1,6 @@
 package com.aw.ontopnote
 
 import CommonUtils.runOnDefaultThread
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -16,7 +15,7 @@ import android.widget.Button
 import com.aw.ontopnote.model.Note
 import kotlinx.android.synthetic.main.activity_main.*
 import com.aw.ontopnote.model.NoteRepository
-import com.aw.ontopnote.model.event.FirstNoteEvent
+import com.aw.ontopnote.model.event.UpdateNoteEvent
 import org.greenrobot.eventbus.EventBus
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -61,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                         firstNote.content = s.toString()
                         NoteRepository.updateNote(applicationContext, firstNote)
 
-                        EventBus.getDefault().post(FirstNoteEvent(firstNote))
+                        EventBus.getDefault().post(UpdateNoteEvent(firstNote))
                     }
                 })
             }
@@ -124,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     NoteRepository.updateNote(applicationContext, firstNote)
-                    EventBus.getDefault().post(FirstNoteEvent(firstNote))
+                    EventBus.getDefault().post(UpdateNoteEvent(firstNote))
                 }
             }
         })
