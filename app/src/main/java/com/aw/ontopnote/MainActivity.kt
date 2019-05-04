@@ -1,7 +1,9 @@
 package com.aw.ontopnote
 
 import CommonUtils.runOnDefaultThread
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -9,11 +11,17 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.widget.Button
 import com.aw.ontopnote.model.Note
 import kotlinx.android.synthetic.main.activity_main.*
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.event.FirstNoteEvent
 import org.greenrobot.eventbus.EventBus
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.view.children
+import kotlinx.android.synthetic.main.dialog_color.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +31,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     lateinit var firstNote: Note
+
+    private val dialog: AlertDialog by lazy {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.pick_color)
+            .setView(R.layout.dialog_color)
+            .setPositiveButton(R.string.ok) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                         firstNote.content = s.toString()
                         NoteRepository.updateNote(applicationContext, firstNote)
 
-                        EventBus.getDefault().post(FirstNoteEvent(firstNote.content))
+                        EventBus.getDefault().post(FirstNoteEvent(firstNote))
                     }
                 })
             }
@@ -69,5 +87,46 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) {
             startService(Intent(applicationContext, MainService::class.java))
         }
+    }
+
+    fun showColorDialog(v: View) {
+        if (!dialog.isShowing) {
+            dialog.show()
+        }
+
+        CommonUtils.runOnDefaultThread({
+            for (b in dialog.dialog_color_root.children) {
+                if (b is Button) b.setOnClickListener {
+                    val color = (it.background as ColorDrawable).color
+
+                    firstNote.color = when (color) {
+                        ContextCompat.getColor(this, R.color.redMaterial) -> ContextCompat.getColor(this, R.color.redMaterial)
+                        ContextCompat.getColor(this, R.color.pinkMaterial) -> ContextCompat.getColor(this, R.color.pinkMaterial)
+                        ContextCompat.getColor(this, R.color.purpleMaterial) -> ContextCompat.getColor(this, R.color.purpleMaterial)
+                        ContextCompat.getColor(this, R.color.deepPurpleMaterial) -> ContextCompat.getColor(this, R.color.deepPurpleMaterial)
+                        ContextCompat.getColor(this, R.color.indigoMaterial) -> ContextCompat.getColor(this, R.color.indigoMaterial)
+                        ContextCompat.getColor(this, R.color.lightBluetMaterial) -> ContextCompat.getColor(this, R.color.lightBluetMaterial)
+                        ContextCompat.getColor(this, R.color.cyanMaterial) -> ContextCompat.getColor(this, R.color.cyanMaterial)
+                        ContextCompat.getColor(this, R.color.tealMaterial) -> ContextCompat.getColor(this, R.color.tealMaterial)
+                        ContextCompat.getColor(this, R.color.greenMaterial) -> ContextCompat.getColor(this, R.color.greenMaterial)
+                        ContextCompat.getColor(this, R.color.lightGreenMaterial) -> ContextCompat.getColor(this, R.color.lightGreenMaterial)
+                        ContextCompat.getColor(this, R.color.limeMaterial) -> ContextCompat.getColor(this, R.color.limeMaterial)
+                        ContextCompat.getColor(this, R.color.yellowMaterial) -> ContextCompat.getColor(this, R.color.yellowMaterial)
+                        ContextCompat.getColor(this, R.color.amberMaterial) -> ContextCompat.getColor(this, R.color.amberMaterial)
+                        ContextCompat.getColor(this, R.color.orangeMaterial) -> ContextCompat.getColor(this, R.color.orangeMaterial)
+                        ContextCompat.getColor(this, R.color.deepOrangeMaterial) -> ContextCompat.getColor(this, R.color.deepOrangeMaterial)
+                        ContextCompat.getColor(this, R.color.brownMaterial) -> ContextCompat.getColor(this, R.color.brownMaterial)
+                        ContextCompat.getColor(this, R.color.greyMaterial) -> ContextCompat.getColor(this, R.color.greyMaterial)
+                        ContextCompat.getColor(this, R.color.blueGreyMaterial) -> ContextCompat.getColor(this, R.color.blueGreyMaterial)
+                        else -> {
+                            ContextCompat.getColor(this, R.color.blueMaterial)
+                        }
+                    }
+
+                    NoteRepository.updateNote(applicationContext, firstNote)
+                    EventBus.getDefault().post(FirstNoteEvent(firstNote))
+                }
+            }
+        })
     }
 }

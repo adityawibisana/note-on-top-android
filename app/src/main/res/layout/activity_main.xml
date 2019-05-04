@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Button android:id="@+id/btSwitchColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_color"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/etNote"
+            android:onClick="showColorDialog" />
+
     <EditText android:id="@+id/etNote"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"

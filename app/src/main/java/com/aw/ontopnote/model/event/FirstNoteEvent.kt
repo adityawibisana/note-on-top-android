@@ -1,3 +1,5 @@
 package com.aw.ontopnote.model.event
 
-data class FirstNoteEvent(val content: String)
+import com.aw.ontopnote.model.Note
+
+data class FirstNoteEvent(val note: Note)

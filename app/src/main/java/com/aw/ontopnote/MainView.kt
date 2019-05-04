@@ -47,7 +47,8 @@ class MainView(context: Context) : RelativeLayout(context) {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: FirstNoteEvent) {
-        text_to_show.text = event.content
+        text_to_show.text = event.note.content
+        text_to_show.setBackgroundColor(event.note.color)
 
         if (!isExpanded) {
             switchTextPosition()

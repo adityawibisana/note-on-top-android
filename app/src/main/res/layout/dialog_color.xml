@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.flexbox.FlexboxLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/dialog_color_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:flexWrap="wrap"
+        app:justifyContent="space_around" >
+
+    <Button android:id="@+id/color1"
+            android:background="@color/redMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color2"
+            android:background="@color/pinkMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color3"
+            android:background="@color/purpleMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color4"
+            android:background="@color/deepPurpleMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color5"
+            android:background="@color/indigoMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color6"
+            android:background="@color/blueMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color7"
+            android:background="@color/lightBluetMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color8"
+            android:background="@color/cyanMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color9"
+            android:background="@color/blueGreyMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color10"
+            android:background="@color/tealMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color11"
+            android:background="@color/greenMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color12"
+            android:background="@color/lightGreenMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color13"
+            android:background="@color/limeMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color14"
+            android:background="@color/yellowMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color15"
+            android:background="@color/amberMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color16"
+            android:background="@color/orangeMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color17"
+            android:background="@color/deepOrangeMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color18"
+            android:background="@color/brownMaterial"
+            style="@style/ColorPaletteButton" />
+
+    <Button android:id="@+id/color19"
+            android:background="@color/greyMaterial"
+            style="@style/ColorPaletteButton" />
+
+</com.google.android.flexbox.FlexboxLayout>
