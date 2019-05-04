@@ -30,7 +30,7 @@ class MainService : Service() {
               WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
                       or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                       or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                      or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         )
 
