@@ -12,6 +12,7 @@
             android:text="(+)"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toTopOf="@id/btSwitchColor"
+            android:visibility="gone"
             android:onClick="addNote" />
 
     <Button android:id="@+id/btSwitchColor"
