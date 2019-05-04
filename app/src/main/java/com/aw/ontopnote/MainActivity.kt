@@ -49,11 +49,11 @@ class MainActivity : AppCompatActivity() {
         runOnDefaultThread({
             firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
             runOnUiThread {
-                etNote.setText(firstNote.content)
+                et_note.setText(firstNote.content)
             }
         })
 
-        etNote.addTextChangedListener(object: TextWatcher {
+        et_note.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 runOnDefaultThread({
                     if (::firstNote.isInitialized) {
