@@ -18,7 +18,6 @@ import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.event.UpdateNoteEvent
 import org.greenrobot.eventbus.EventBus
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import com.aw.ontopnote.helper.Utils
 import kotlinx.android.synthetic.main.dialog_color.*
@@ -105,6 +104,12 @@ class MainActivity : AppCompatActivity() {
                     EventBus.getDefault().post(UpdateNoteEvent(firstNote))
                 }
             }
+        })
+    }
+
+    fun addNote(v: View) {
+        CommonUtils.runOnDefaultThread({
+            NoteRepository.insertNote(applicationContext, Note(content = "2nd note"))
         })
     }
 }
