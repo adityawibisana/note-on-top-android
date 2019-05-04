@@ -4,18 +4,17 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="wrap_content"
                                                    android:layout_height="wrap_content"
-                                                   android:orientation="vertical"
-                                                   android:id="@+id/root">
+                                                   android:orientation="vertical" android:id="@+id/relativeLayout">
 
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginTop="@dimen/margin"
               android:layout_marginStart="0dp"
-              android:id="@+id/text"
+              android:id="@+id/text_to_show"
               style="@style/DefaultText"
               app:layout_constraintTop_toTopOf="parent"
               app:layout_constraintStart_toStartOf="parent"
-              android:inputType="textMultiLine|textNoSuggestions"
-              android:text="Halo semua" />
+              tools:layout_conversion_wrapWidth="64"
+              tools:layout_conversion_wrapHeight="149"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

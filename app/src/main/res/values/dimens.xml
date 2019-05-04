@@ -2,5 +2,4 @@
 <resources>
     <dimen name="margin">12dp</dimen>
     <dimen name="minimum_clickable">48dp</dimen>
-    <dimen name="right_padding">40dp</dimen>
 </resources>
