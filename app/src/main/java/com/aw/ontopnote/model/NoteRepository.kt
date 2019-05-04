@@ -37,4 +37,9 @@ object NoteRepository {
             Log.v(TAG, "updated")
         })
     }
+
+    fun getAllNotes(context: Context): List<Note>  {
+        val noteDao = NotesDatabase.getInstance(context).noteDao()
+        return noteDao.getAllNotesList()
+    }
 }

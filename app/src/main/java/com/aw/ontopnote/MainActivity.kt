@@ -2,6 +2,7 @@ package com.aw.ontopnote
 
 import CommonUtils.runOnDefaultThread
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -9,10 +10,17 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.widget.Button
+import com.aw.ontopnote.model.Note
 import kotlinx.android.synthetic.main.activity_main.*
 import com.aw.ontopnote.model.NoteRepository
-import com.aw.ontopnote.model.event.FirstNoteEvent
+import com.aw.ontopnote.model.event.UpdateNoteEvent
 import org.greenrobot.eventbus.EventBus
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.children
+import com.aw.ontopnote.helper.Utils
+import kotlinx.android.synthetic.main.dialog_color.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,26 +29,39 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "MainActivity"
     }
 
+    lateinit var firstNote: Note
+
+    private val dialog: AlertDialog by lazy {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.pick_color)
+            .setView(R.layout.dialog_color)
+            .setPositiveButton(R.string.ok) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         checkDrawOverlayPermission()
 
         runOnDefaultThread({
-            val firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
+            firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
             runOnUiThread {
-                etNote.setText(firstNote.content)
+                et_note.setText(firstNote.content)
             }
         })
 
-        etNote.addTextChangedListener(object: TextWatcher {
+        et_note.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 runOnDefaultThread({
-                    val firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
-                    firstNote.content = s.toString()
-                    NoteRepository.updateNote(applicationContext, firstNote)
+                    if (::firstNote.isInitialized) {
+                        firstNote.content = s.toString()
+                        NoteRepository.updateNote(applicationContext, firstNote)
 
-                    EventBus.getDefault().post(FirstNoteEvent(firstNote.content))
+                        EventBus.getDefault().post(UpdateNoteEvent(firstNote))
+                    }
                 })
             }
 
@@ -65,5 +86,30 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) {
             startService(Intent(applicationContext, MainService::class.java))
         }
+    }
+
+    fun showColorDialog(v: View) {
+        if (!dialog.isShowing) {
+            dialog.show()
+        }
+
+        CommonUtils.runOnDefaultThread({
+            for (b in dialog.dialog_color_root.children) {
+                if (b is Button) b.setOnClickListener {
+                    val color = (it.background as ColorDrawable).color
+
+                    firstNote.color = Utils.rgbToColorRes(this, color)
+
+                    NoteRepository.updateNote(applicationContext, firstNote)
+                    EventBus.getDefault().post(UpdateNoteEvent(firstNote))
+                }
+            }
+        })
+    }
+
+    fun addNote(v: View) {
+        CommonUtils.runOnDefaultThread({
+            NoteRepository.insertNote(applicationContext, Note(content = "2nd note"))
+        })
     }
 }

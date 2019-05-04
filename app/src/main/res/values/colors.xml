@@ -5,4 +5,27 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="colorTextLight">#FFFFFF</color>
+
+    <!-- taken from https://www.materialui.co/colors , first line -->
+    <color name="redMaterial">#F44336</color>
+    <color name="pinkMaterial">#E91E63</color>
+    <color name="purpleMaterial">#9C27B0</color>
+    <color name="deepPurpleMaterial">#673AB7</color>
+    <color name="indigoMaterial">#3F51B5</color>
+    <color name="blueMaterial">#2196F3</color>
+    <color name="lightBluetMaterial">#03A9F4</color>
+    <color name="cyanMaterial">#00BCD4</color>
+    <color name="tealMaterial">#009688</color>
+    <color name="greenMaterial">#4CAF50</color>
+    <color name="lightGreenMaterial">#8BC34A</color>
+    <color name="limeMaterial">#CDDC39</color>
+    <color name="yellowMaterial">#FFEB3B</color>
+    <color name="amberMaterial">#FFC107</color>
+    <color name="orangeMaterial">#FF9800</color>
+    <color name="deepOrangeMaterial">#FF5722</color>
+    <color name="brownMaterial">#795548</color>
+    <color name="greyMaterial">#9E9E9E</color>
+    <color name="blueGreyMaterial">#607D8B</color>
+
+
 </resources>

@@ -1,16 +1,19 @@
 package com.aw.ontopnote
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.widget.*
-import com.aw.ontopnote.model.event.FirstNoteEvent
+import com.aw.ontopnote.model.event.UpdateNoteEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.ThreadMode
 import org.greenrobot.eventbus.Subscribe
 import android.util.Log
-import android.view.View
 import android.view.LayoutInflater
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import com.aw.ontopnote.helper.Utils
 import kotlinx.android.synthetic.main.view_main.view.*
 
 
@@ -28,7 +31,7 @@ class MainView(context: Context) : RelativeLayout(context) {
         (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_main, this)
 
         text_to_show.setOnClickListener {
-            switchTextToShowPosition()
+            switchTextPosition()
 
             if (isDoubleClick(System.currentTimeMillis() ,lastClickTimeStamp)) {
                 Log.v(TAG, "Double Clicked")
@@ -46,22 +49,28 @@ class MainView(context: Context) : RelativeLayout(context) {
         EventBus.getDefault().register(this)
     }
 
+    @SuppressLint("ResourceType")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: FirstNoteEvent) {
-        text_to_show.text = event.content
+    fun onMessageEvent(event: UpdateNoteEvent) {
+        text_to_show.text = event.note.content
+
+        DrawableCompat.setTint(
+            text_to_show.background,
+            Utils.rgbToColorRes(context, event.note.color)
+        )
 
         if (!isExpanded) {
-            switchTextToShowPosition()
+            switchTextPosition()
         }
     }
 
     private fun isDoubleClick(new: Long, old: Long) = new - old < 300
 
-    private fun switchTextToShowPosition() {
-        val targetX = if (isExpanded) -0.8f else 0.0f
+    private fun switchTextPosition() {
         isExpanded = !isExpanded
+        val targetX = if (isExpanded) 0.0f else -1 * text_to_show.width + 35.0f
 
-        ObjectAnimator.ofFloat(text_to_show, "translationX", text_to_show.width * targetX).apply {
+        ObjectAnimator.ofFloat(text_to_show, "translationX", targetX).apply {
             duration = 300
             start()
         }
