@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import com.aw.ontopnote.model.Note
 import kotlinx.android.synthetic.main.activity_main.*
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.event.FirstNoteEvent
@@ -21,13 +22,15 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "MainActivity"
     }
 
+    lateinit var firstNote: Note
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         checkDrawOverlayPermission()
 
         runOnDefaultThread({
-            val firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
+            firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
             runOnUiThread {
                 etNote.setText(firstNote.content)
             }
@@ -36,11 +39,12 @@ class MainActivity : AppCompatActivity() {
         etNote.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 runOnDefaultThread({
-                    val firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
-                    firstNote.content = s.toString()
-                    NoteRepository.updateNote(applicationContext, firstNote)
+                    if (::firstNote.isInitialized) {
+                        firstNote.content = s.toString()
+                        NoteRepository.updateNote(applicationContext, firstNote)
 
-                    EventBus.getDefault().post(FirstNoteEvent(firstNote.content))
+                        EventBus.getDefault().post(FirstNoteEvent(firstNote.content))
+                    }
                 })
             }
 
