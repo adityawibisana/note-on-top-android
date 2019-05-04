@@ -1,6 +1,7 @@
 package com.aw.ontopnote
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.widget.*
@@ -10,6 +11,9 @@ import org.greenrobot.eventbus.ThreadMode
 import org.greenrobot.eventbus.Subscribe
 import android.util.Log
 import android.view.LayoutInflater
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import com.aw.ontopnote.helper.Utils
 import kotlinx.android.synthetic.main.view_main.view.*
 
 
@@ -45,10 +49,15 @@ class MainView(context: Context) : RelativeLayout(context) {
         EventBus.getDefault().register(this)
     }
 
+    @SuppressLint("ResourceType")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: UpdateNoteEvent) {
         text_to_show.text = event.note.content
-        text_to_show.setBackgroundColor(event.note.color)
+
+        DrawableCompat.setTint(
+            text_to_show.background,
+            Utils.rgbToColorRes(context, event.note.color)
+        )
 
         if (!isExpanded) {
             switchTextPosition()

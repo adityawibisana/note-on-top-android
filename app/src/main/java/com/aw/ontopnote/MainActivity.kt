@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.EventBus
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import com.aw.ontopnote.helper.Utils
 import kotlinx.android.synthetic.main.dialog_color.*
 
 class MainActivity : AppCompatActivity() {
@@ -98,29 +99,7 @@ class MainActivity : AppCompatActivity() {
                 if (b is Button) b.setOnClickListener {
                     val color = (it.background as ColorDrawable).color
 
-                    firstNote.color = when (color) {
-                        ContextCompat.getColor(this, R.color.redMaterial) -> ContextCompat.getColor(this, R.color.redMaterial)
-                        ContextCompat.getColor(this, R.color.pinkMaterial) -> ContextCompat.getColor(this, R.color.pinkMaterial)
-                        ContextCompat.getColor(this, R.color.purpleMaterial) -> ContextCompat.getColor(this, R.color.purpleMaterial)
-                        ContextCompat.getColor(this, R.color.deepPurpleMaterial) -> ContextCompat.getColor(this, R.color.deepPurpleMaterial)
-                        ContextCompat.getColor(this, R.color.indigoMaterial) -> ContextCompat.getColor(this, R.color.indigoMaterial)
-                        ContextCompat.getColor(this, R.color.lightBluetMaterial) -> ContextCompat.getColor(this, R.color.lightBluetMaterial)
-                        ContextCompat.getColor(this, R.color.cyanMaterial) -> ContextCompat.getColor(this, R.color.cyanMaterial)
-                        ContextCompat.getColor(this, R.color.tealMaterial) -> ContextCompat.getColor(this, R.color.tealMaterial)
-                        ContextCompat.getColor(this, R.color.greenMaterial) -> ContextCompat.getColor(this, R.color.greenMaterial)
-                        ContextCompat.getColor(this, R.color.lightGreenMaterial) -> ContextCompat.getColor(this, R.color.lightGreenMaterial)
-                        ContextCompat.getColor(this, R.color.limeMaterial) -> ContextCompat.getColor(this, R.color.limeMaterial)
-                        ContextCompat.getColor(this, R.color.yellowMaterial) -> ContextCompat.getColor(this, R.color.yellowMaterial)
-                        ContextCompat.getColor(this, R.color.amberMaterial) -> ContextCompat.getColor(this, R.color.amberMaterial)
-                        ContextCompat.getColor(this, R.color.orangeMaterial) -> ContextCompat.getColor(this, R.color.orangeMaterial)
-                        ContextCompat.getColor(this, R.color.deepOrangeMaterial) -> ContextCompat.getColor(this, R.color.deepOrangeMaterial)
-                        ContextCompat.getColor(this, R.color.brownMaterial) -> ContextCompat.getColor(this, R.color.brownMaterial)
-                        ContextCompat.getColor(this, R.color.greyMaterial) -> ContextCompat.getColor(this, R.color.greyMaterial)
-                        ContextCompat.getColor(this, R.color.blueGreyMaterial) -> ContextCompat.getColor(this, R.color.blueGreyMaterial)
-                        else -> {
-                            ContextCompat.getColor(this, R.color.blueMaterial)
-                        }
-                    }
+                    firstNote.color = Utils.rgbToColorRes(this, color)
 
                     NoteRepository.updateNote(applicationContext, firstNote)
                     EventBus.getDefault().post(UpdateNoteEvent(firstNote))
