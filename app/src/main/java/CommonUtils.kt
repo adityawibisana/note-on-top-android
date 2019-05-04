@@ -1,5 +1,6 @@
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.Looper
 import android.util.Log
 
 object CommonUtils {
@@ -28,6 +29,10 @@ object CommonUtils {
 
     fun runOnDefaultThread(runnable: () -> Unit, delayMillis: Long = 0) {
         handler.postDelayed(runnable, delayMillis)
+    }
+
+    fun runOnUIThread(runnable: () -> Unit, delayMillis: Long = 0) {
+        Handler(Looper.getMainLooper()).postDelayed(runnable, delayMillis)
     }
 
     fun runOnUnusedThread (runnable: () -> Unit) {
