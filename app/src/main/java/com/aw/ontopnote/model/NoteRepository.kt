@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import com.aw.ontopnote.R
 
 import android.util.Log
+import com.aw.ontopnote.model.event.UpdateNoteEvent
+import org.greenrobot.eventbus.EventBus
 
 object NoteRepository {
     private const val TAG = "NoteRepository"
@@ -34,7 +36,8 @@ object NoteRepository {
             val noteDao = NotesDatabase.getInstance(context).noteDao()
             noteDao.update(note)
 
-            Log.v(TAG, "updated")
+            Log.v(TAG, "updated note with id:" + note.id)
+            EventBus.getDefault().post(UpdateNoteEvent(note))
         })
     }
 

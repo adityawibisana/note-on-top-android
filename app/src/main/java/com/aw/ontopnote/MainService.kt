@@ -8,15 +8,23 @@ import android.os.Build
 import android.os.IBinder
 import android.view.Gravity
 import android.view.WindowManager
+import android.widget.TextView
+import com.aw.ontopnote.model.Note
+import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.model.event.UpdateNoteEvent
+import com.aw.ontopnote.view.DefaultTextView
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class MainService : Service() {
 
-    private val mView: MainView by lazy {
-        MainView(applicationContext)
-    }
-
     private val mWindowManager: WindowManager by lazy {
         (getSystemService( Context.WINDOW_SERVICE) as WindowManager)
+    }
+
+    private val defaultTextView: DefaultTextView by lazy {
+        DefaultTextView.getInstance(this)
     }
 
     private val mLayoutParams: WindowManager.LayoutParams  by lazy {
@@ -39,11 +47,36 @@ class MainService : Service() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    private val textViews: ArrayList<TextView> by lazy {
+        ArrayList<TextView>()
+    }
+
     override fun onCreate() {
         super.onCreate()
 
-        mLayoutParams.gravity = Gravity.TOP or Gravity.START
+        mLayoutParams.gravity = Gravity.START or Gravity.TOP
 
-        mWindowManager.addView(this.mView, mLayoutParams)
+        CommonUtils.runOnDefaultThread({
+            var notes = NoteRepository.getAllNotes(MainApp.applicationContext())
+            for (note in notes) {
+                val textView = defaultTextView.generateTextView(note)
+                mWindowManager.addView(textView, mLayoutParams)
+                textViews.add(textView)
+            }
+        })
+
+        EventBus.getDefault().register(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: UpdateNoteEvent) {
+        CommonUtils.runOnDefaultThread({
+            textViews.find {
+                (it.tag as Note).id == event.note.id
+            }?.let {
+                it.text = event.note.content
+                mWindowManager.updateViewLayout(it, mLayoutParams)
+            }
+        })
     }
 }

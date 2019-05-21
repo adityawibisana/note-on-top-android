@@ -59,8 +59,6 @@ class MainActivity : AppCompatActivity() {
                     if (::firstNote.isInitialized) {
                         firstNote.content = s.toString()
                         NoteRepository.updateNote(applicationContext, firstNote)
-
-                        EventBus.getDefault().post(UpdateNoteEvent(firstNote))
                     }
                 })
             }
@@ -101,7 +99,6 @@ class MainActivity : AppCompatActivity() {
                     firstNote.color = Utils.rgbToColorRes(this, color)
 
                     NoteRepository.updateNote(applicationContext, firstNote)
-                    EventBus.getDefault().post(UpdateNoteEvent(firstNote))
                 }
             }
         })
