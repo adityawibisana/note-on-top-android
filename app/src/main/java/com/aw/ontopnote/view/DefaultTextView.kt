@@ -27,15 +27,16 @@ class DefaultTextView private constructor(context: Context) {
         textView.text = note.content
 
         textView.setOnClickListener {
-            CommonUtils.runOnDefaultThread({
-                //ensure we get the latest note pointer
-                val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
 
-                latestNote.isHidden = !latestNote.isHidden
-                NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
-            })
+            //ensure we get the latest note pointer
+            val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
+
+            latestNote.isHidden = !latestNote.isHidden
+            NoteRepository.updateNote(MainApp.applicationContext(), latestNote) 
         }
 
         return textView
     }
+
+
 }
