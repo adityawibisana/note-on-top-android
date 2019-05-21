@@ -10,7 +10,7 @@ import androidx.room.Update
 @Dao
 interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :id")
-    fun getNoteById(id: String): LiveData<Note>
+    fun getNoteById(id: String): Note
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNote(note: Note)

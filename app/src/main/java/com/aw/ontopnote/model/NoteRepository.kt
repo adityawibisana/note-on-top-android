@@ -26,7 +26,7 @@ object NoteRepository {
         return noteDao.getFirstNote()
     }
 
-    fun getNoteById(context: Context, id: String) : LiveData<Note> {
+    fun getNoteById(context: Context, id: String) : Note {
         val noteDao = NotesDatabase.getInstance(context).noteDao()
         return noteDao.getNoteById(id)
     }
