@@ -1,7 +1,8 @@
+import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
-import android.util.Log
+import android.util.Log 
 
 object CommonUtils {
     private const val TAG = "CommonUtils"
@@ -56,6 +57,10 @@ object CommonUtils {
 
             } while (filtered == -1)
         }
+    }
+
+    fun getDimen(context: Context, resource: Int) : Float {
+        return context.resources.getDimension(resource)
     }
 
 }

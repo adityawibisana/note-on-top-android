@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.TextView
@@ -80,12 +81,14 @@ class MainService : Service() {
                     it.text = ""
                 } else {
                     it.text = event.note.content
-                } 
+                }
 
                 DrawableCompat.setTint(
                     it.background,
                     Utils.rgbToColorRes(MainApp.applicationContext(), event.note.color)
                 )
+
+                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, event.note.fontSize.toFloat())
 
                 mWindowManager.updateViewLayout(it, mLayoutParams)
             }

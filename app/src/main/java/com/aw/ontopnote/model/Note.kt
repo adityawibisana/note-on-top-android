@@ -21,5 +21,8 @@ data class Note (
     var color: Int = ContextCompat.getColor(MainApp.applicationContext(), R.color.blueMaterial),
 
     @ColumnInfo
-    var isHidden: Boolean = false
+    var isHidden: Boolean = false,
+
+    @ColumnInfo
+    var fontSize: Int = 24
 )

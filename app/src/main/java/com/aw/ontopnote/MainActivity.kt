@@ -12,6 +12,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
+import android.widget.SeekBar
 import com.aw.ontopnote.model.Note
 import kotlinx.android.synthetic.main.activity_main.*
 import com.aw.ontopnote.model.NoteRepository
@@ -65,6 +66,22 @@ class MainActivity : AppCompatActivity() {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        })
+
+        sb_font_size.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (::firstNote.isInitialized) {
+                    CommonUtils.runOnDefaultThread({
+                        val convertedSize = progress / 100.0f * CommonUtils.getDimen(this@MainActivity, R.dimen.maximum_font_size)
+
+                        firstNote.fontSize = convertedSize.toInt()
+                        NoteRepository.updateNote(applicationContext, firstNote)
+                    })
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) { }
+            override fun onStopTrackingTouch(seekBar: SeekBar?) { }
         })
     }
 
