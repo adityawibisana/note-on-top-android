@@ -32,11 +32,9 @@ class DefaultTextView private constructor(context: Context) {
             val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
 
             latestNote.isHidden = !latestNote.isHidden
-            NoteRepository.updateNote(MainApp.applicationContext(), latestNote) 
+            NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
         }
 
         return textView
     }
-
-
 }

@@ -77,6 +77,8 @@ class MainService : Service() {
             textViews.find {
                 (it.tag as Note).id == event.note.id
             }?.let {
+                // TODO: refactor it, move to default text view, using decorateTextView(textView, note) method
+
                 if (event.note.isHidden) {
                     it.text = ""
                 } else {
