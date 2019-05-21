@@ -9,10 +9,12 @@ import android.os.IBinder
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.core.graphics.drawable.DrawableCompat
+import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.event.UpdateNoteEvent
-import com.aw.ontopnote.view.DefaultTextView
+import com.aw.ontopnote.view.DefaultTextView 
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -75,6 +77,12 @@ class MainService : Service() {
                 (it.tag as Note).id == event.note.id
             }?.let {
                 it.text = event.note.content
+
+                DrawableCompat.setTint(
+                    it.background,
+                    Utils.rgbToColorRes(MainApp.applicationContext(), event.note.color)
+                )
+
                 mWindowManager.updateViewLayout(it, mLayoutParams)
             }
         })
