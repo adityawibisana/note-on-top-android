@@ -3,9 +3,11 @@ package com.aw.ontopnote.view
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.TextView
+import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.R
 import com.aw.ontopnote.helper.SingletonHolder
 import com.aw.ontopnote.model.Note
+import com.aw.ontopnote.model.NoteRepository
 
 class DefaultTextView private constructor(context: Context) {
 
@@ -23,6 +25,12 @@ class DefaultTextView private constructor(context: Context) {
         var textView = inflater.inflate(R.layout.view_default_text_view, null) as TextView
         textView.tag = note
         textView.text = note.content
+
+        textView.setOnClickListener {
+            note.isHidden = !note.isHidden
+            NoteRepository.updateNote(MainApp.applicationContext(), note)
+        }
+
         return textView
     }
 }

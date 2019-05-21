@@ -18,5 +18,8 @@ data class Note (
     var content: String,
 
     @ColumnInfo
-    var color: Int = ContextCompat.getColor(MainApp.applicationContext(), R.color.blueMaterial)
+    var color: Int = ContextCompat.getColor(MainApp.applicationContext(), R.color.blueMaterial),
+
+    @ColumnInfo
+    var isHidden: Boolean = false
 )

@@ -76,7 +76,11 @@ class MainService : Service() {
             textViews.find {
                 (it.tag as Note).id == event.note.id
             }?.let {
-                it.text = event.note.content
+                if (event.note.isHidden) {
+                    it.text = ""
+                } else {
+                    it.text = event.note.content
+                } 
 
                 DrawableCompat.setTint(
                     it.background,
