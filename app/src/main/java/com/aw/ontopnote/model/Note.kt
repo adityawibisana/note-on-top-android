@@ -31,6 +31,6 @@ class ViewType {
     companion object {
         const val VISIBLE: Int = 0
         const val PARTIALLY_HIDDEN : Int = 1
-        const val HIDDEN : Int = 2
+        const val GONE : Int = 2
     }
 }

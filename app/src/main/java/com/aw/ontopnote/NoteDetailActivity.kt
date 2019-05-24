@@ -37,7 +37,12 @@ class NoteDetailActivity : AppCompatActivity() {
                 runOnDefaultThread({
                     if (::note.isInitialized) {
                         note.content = s.toString()
-                        note.viewType = ViewType.VISIBLE
+
+                        //if it is hidden, stay hidden
+                        if (note.viewType != ViewType.GONE) {
+                            note.viewType = ViewType.VISIBLE
+                        }
+
                         NoteRepository.updateNote(applicationContext, note)
                     }
                 })
@@ -84,6 +89,16 @@ class NoteDetailActivity : AppCompatActivity() {
                 override fun onStartTrackingTouch(seekBar: SeekBar?) { }
                 override fun onStopTrackingTouch(seekBar: SeekBar?) { }
             })
+
+            CommonUtils.runOnUIThread({
+                tb_always_show.isChecked = note.viewType != ViewType.GONE
+            })
+
+            tb_always_show.setOnCheckedChangeListener { _, isChecked ->
+                note.viewType = if (isChecked) ViewType.VISIBLE else ViewType.GONE
+                NoteRepository.updateNote(applicationContext, note)
+            }
+
         })
     }
 

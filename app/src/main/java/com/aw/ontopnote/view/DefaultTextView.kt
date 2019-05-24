@@ -18,7 +18,7 @@ import android.widget.Toast
 import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
 import com.aw.ontopnote.model.ViewType
-
+import android.util.Log
 
 class DefaultTextView private constructor(context: Context) {
 
@@ -90,7 +90,14 @@ class DefaultTextView private constructor(context: Context) {
     }
 
     fun decorateTextView (textView: TextView, note: Note) : TextView {
-        textView.visibility = if (note.content.isBlank() && note.viewType != ViewType.PARTIALLY_HIDDEN) View.GONE else View.VISIBLE
+        Log.v(TAG, "note.viewType:${note.viewType}")
+
+        textView.visibility = when (note.viewType) {
+            ViewType.GONE -> View.GONE
+            else -> {
+                if (note.content.isBlank() && note.viewType != ViewType.PARTIALLY_HIDDEN) View.GONE else View.VISIBLE
+            }
+        }
 
         textView.text = if (note.viewType == ViewType.PARTIALLY_HIDDEN) "" else note.content
 
