@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_note_detail.*
 class NoteDetailActivity : AppCompatActivity() {
 
     companion object {
-        public val EXTRA_NOTE_ID = "extraNoteId"
+        const val EXTRA_NOTE_ID = "extraNoteId"
     }
 
     private lateinit var note: Note
