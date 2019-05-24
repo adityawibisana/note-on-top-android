@@ -12,6 +12,9 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :id")
     fun getNoteById(id: String): Note
 
+    @Query("SELECT * FROM notes WHERE id = :id")
+    fun getLiveDataNoteById(id: String): LiveData<Note>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNote(note: Note)
 

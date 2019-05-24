@@ -31,6 +31,11 @@ object NoteRepository {
         return noteDao.getNoteById(id)
     }
 
+    fun getLiveDataNoteById(context: Context, id: String) : LiveData<Note> {
+        val noteDao = NotesDatabase.getInstance(context).noteDao()
+        return noteDao.getLiveDataNoteById(id)
+    }
+
     fun updateNote(context: Context, note: Note) {
         CommonUtils.runOnDefaultThread({
             val noteDao = NotesDatabase.getInstance(context).noteDao()
