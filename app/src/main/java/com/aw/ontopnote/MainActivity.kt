@@ -42,6 +42,23 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    private val textWatcher: TextWatcher by lazy {
+        object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                runOnDefaultThread({
+                    if (::firstNote.isInitialized) {
+                        firstNote.content = s.toString()
+                        firstNote.isHidden = false
+                        NoteRepository.updateNote(applicationContext, firstNote)
+                    }
+                })
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -52,20 +69,6 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 et_note.setText(firstNote.content)
             }
-        })
-
-        et_note.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                runOnDefaultThread({
-                    if (::firstNote.isInitialized) {
-                        firstNote.content = s.toString()
-                        NoteRepository.updateNote(applicationContext, firstNote)
-                    }
-                })
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
         })
 
         // TODO: update the value based on current note seek bar progress.
@@ -84,6 +87,16 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) { }
             override fun onStopTrackingTouch(seekBar: SeekBar?) { }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        et_note.addTextChangedListener(textWatcher)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        et_note.removeTextChangedListener(textWatcher)
     }
 
     private fun checkDrawOverlayPermission() {
