@@ -71,13 +71,8 @@ class NoteDetailActivity : AppCompatActivity() {
 
             et_note.setText(note.content)
 
-            val maxFontSize = CommonUtils.getDimen(this, R.dimen.maximum_font_size)
-            val minFontSize = CommonUtils.getDimen(this, R.dimen.minimum_font_size)
-            sb_font_size.max = (maxFontSize - minFontSize).toInt()
-
-            val progress = (note.fontSize * 100 / maxFontSize).toInt()
+            val progress = note.fontSize
             sb_font_size.progress = progress
-            Log.v(TAG, "Progress is:$progress")
 
             // TODO: update the value based on current note seek bar progress.
             sb_font_size.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
