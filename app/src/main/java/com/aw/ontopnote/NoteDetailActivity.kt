@@ -18,7 +18,7 @@ import com.aw.ontopnote.view.DefaultTextView
 import kotlinx.android.synthetic.main.activity_note_detail.*
 import kotlinx.android.synthetic.main.dialog_color.*
 import org.greenrobot.eventbus.EventBus
-import android.util.Log
+import com.aw.ontopnote.model.ViewType
 
 class NoteDetailActivity : AppCompatActivity() {
 
@@ -37,7 +37,7 @@ class NoteDetailActivity : AppCompatActivity() {
                 runOnDefaultThread({
                     if (::note.isInitialized) {
                         note.content = s.toString()
-                        note.isHidden = false
+                        note.viewType = ViewType.VISIBLE
                         NoteRepository.updateNote(applicationContext, note)
                     }
                 })

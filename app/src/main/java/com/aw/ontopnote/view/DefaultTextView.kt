@@ -13,11 +13,11 @@ import com.aw.ontopnote.helper.SingletonHolder
 import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
-import android.util.Log
 import android.view.GestureDetector
 import android.widget.Toast
 import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
+import com.aw.ontopnote.model.ViewType
 
 
 class DefaultTextView private constructor(context: Context) {
@@ -47,7 +47,7 @@ class DefaultTextView private constructor(context: Context) {
                 //ensure we get the latest note pointer
                 val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
 
-                latestNote.isHidden = !latestNote.isHidden
+                latestNote.viewType = if (latestNote.viewType == ViewType.PARTIALLY_HIDDEN) ViewType.VISIBLE else ViewType.PARTIALLY_HIDDEN
                 NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
                 return true
             }
@@ -64,7 +64,7 @@ class DefaultTextView private constructor(context: Context) {
 
                 //ensure we get the latest note pointer
                 val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
-                latestNote.isHidden = false
+                latestNote.viewType = ViewType.VISIBLE
                 NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
 
                 textView.context.startActivity(intent)
@@ -90,9 +90,9 @@ class DefaultTextView private constructor(context: Context) {
     }
 
     fun decorateTextView (textView: TextView, note: Note) : TextView {
-        textView.visibility = if (note.content.isBlank() && !note.isHidden) View.GONE else View.VISIBLE
+        textView.visibility = if (note.content.isBlank() && note.viewType != ViewType.PARTIALLY_HIDDEN) View.GONE else View.VISIBLE
 
-        textView.text = if (note.isHidden) "" else note.content
+        textView.text = if (note.viewType == ViewType.PARTIALLY_HIDDEN) "" else note.content
 
         DrawableCompat.setTint(
             textView.background,
