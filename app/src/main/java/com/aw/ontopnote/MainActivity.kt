@@ -16,8 +16,6 @@ import android.widget.SeekBar
 import com.aw.ontopnote.model.Note
 import kotlinx.android.synthetic.main.activity_main.*
 import com.aw.ontopnote.model.NoteRepository
-import com.aw.ontopnote.model.event.UpdateNoteEvent
-import org.greenrobot.eventbus.EventBus
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import com.aw.ontopnote.helper.Utils
@@ -139,5 +137,12 @@ class MainActivity : AppCompatActivity() {
         CommonUtils.runOnDefaultThread({
             NoteRepository.insertNote(applicationContext, Note(content = "2nd note"))
         })
+    }
+
+    fun goToNoteDetail(v: View) {
+        if (::firstNote.isInitialized) {
+            val intent = Intent(this, NoteDetailActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
