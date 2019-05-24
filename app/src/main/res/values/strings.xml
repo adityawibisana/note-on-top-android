@@ -7,4 +7,5 @@
     <string name="pending_wait_note_detail">We\'re going to get you to this note. Please wait for a while…</string>
     <string name="font_size">Font size:</string>
     <string name="ok">Ok</string>
+    <string name="make_this_note_sticky">Make this note sticky</string>
 </resources>
