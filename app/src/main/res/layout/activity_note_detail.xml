@@ -11,12 +11,24 @@
              <!--android:id="@+id/tv_note"-->
              <!--android:visibility="gone" />-->
 
-    <SeekBar android:layout_width="match_parent"
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/font_size"
+              android:padding="@dimen/margin"
+              android:id="@+id/tv_font_size"
+              app:layout_constraintLeft_toLeftOf="parent"
+              app:layout_constraintTop_toTopOf="@id/sb_font_size"
+              app:layout_constraintRight_toLeftOf="@id/sb_font_size"
+              app:layout_constraintHorizontal_weight="1"/>
+
+    <SeekBar android:layout_width="0dp"
              android:layout_height="wrap_content"
-             app:layout_constraintRight_toRightOf="parent"
+             app:layout_constraintLeft_toRightOf="@id/tv_font_size"
              app:layout_constraintBottom_toTopOf="@id/bt_switch_color"
-             android:padding="@dimen/margin"
-             android:id="@+id/sb_font_size" />
+             app:layout_constraintRight_toRightOf="parent"
+             app:layout_constraintHorizontal_weight="1"
+             android:padding="@dimen/margin"             
+             android:id="@+id/sb_font_size"/>
 
     <Button android:id="@+id/bt_switch_color"
             android:layout_width="match_parent"

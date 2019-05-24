@@ -4,6 +4,7 @@
     <string name="input_note_here">To Do: Being Awesome</string>
     <string name="pick_color">Switch color for this note</string>
     <string name="pick_font_size">Change the font size</string>
-    <string name="pending_wait_note_detail">We\'re going to get you to this note. Please wait for a while...</string>
+    <string name="pending_wait_note_detail">We\'re going to get you to this note. Please wait for a while…</string>
+    <string name="font_size">Font size:</string>
     <string name="ok">Ok</string>
 </resources>
