@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
@@ -15,7 +16,7 @@ import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.event.UpdateNoteEvent
-import com.aw.ontopnote.view.DefaultTextView 
+import com.aw.ontopnote.view.DefaultTextView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -79,11 +80,9 @@ class MainService : Service() {
             }?.let {
                 // TODO: refactor it, move to default text view, using decorateTextView(textView, note) method
 
-                if (event.note.isHidden) {
-                    it.text = ""
-                } else {
-                    it.text = event.note.content
-                }
+                it.visibility = if (event.note.content.isBlank() && !event.note.isHidden) View.GONE else View.VISIBLE
+
+                it.text = if (event.note.isHidden) "" else event.note.content
 
                 DrawableCompat.setTint(
                     it.background,
