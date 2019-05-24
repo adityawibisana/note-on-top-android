@@ -27,5 +27,7 @@
     <color name="greyMaterial">#9E9E9E</color>
     <color name="blueGreyMaterial">#607D8B</color>
 
+    <color name="black">#000000</color>
+
 
 </resources>

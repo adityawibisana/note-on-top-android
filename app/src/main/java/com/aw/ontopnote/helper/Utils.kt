@@ -26,6 +26,7 @@ object Utils {
             ContextCompat.getColor(context, R.color.brownMaterial) -> ContextCompat.getColor(context, R.color.brownMaterial)
             ContextCompat.getColor(context, R.color.greyMaterial) -> ContextCompat.getColor(context, R.color.greyMaterial)
             ContextCompat.getColor(context, R.color.blueGreyMaterial) -> ContextCompat.getColor(context, R.color.blueGreyMaterial)
+            ContextCompat.getColor(context, R.color.black) -> ContextCompat.getColor(context, R.color.black)
             else -> {
                 ContextCompat.getColor(context, R.color.blueMaterial)
             }

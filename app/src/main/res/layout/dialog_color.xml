@@ -84,4 +84,8 @@
             android:background="@color/greyMaterial"
             style="@style/ColorPaletteButton" />
 
+    <Button android:id="@+id/color20"
+            android:background="@color/black"
+            style="@style/ColorPaletteButton" />
+
 </com.google.android.flexbox.FlexboxLayout>
