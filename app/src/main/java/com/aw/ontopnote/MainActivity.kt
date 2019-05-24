@@ -142,6 +142,7 @@ class MainActivity : AppCompatActivity() {
     fun goToNoteDetail(v: View) {
         if (::firstNote.isInitialized) {
             val intent = Intent(this, NoteDetailActivity::class.java)
+            intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, firstNote.id)
             startActivity(intent)
         }
     }

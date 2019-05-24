@@ -7,4 +7,6 @@
         android:layout_height="match_parent"
         tools:context=".NoteDetailActivity">
 
+    <include layout="@layout/view_default_text_view" android:id="@+id/tv_note" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
