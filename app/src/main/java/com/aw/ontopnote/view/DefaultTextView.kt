@@ -28,7 +28,6 @@ class DefaultTextView private constructor(context: Context) {
     fun generateTextView(note: Note): TextView {
         var textView = inflater.inflate(R.layout.view_default_text_view, null) as TextView
         textView.tag = note
-        textView.text = note.content
 
         textView.setOnClickListener {
 
@@ -39,7 +38,7 @@ class DefaultTextView private constructor(context: Context) {
             NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
         }
 
-        return textView
+        return decorateTextView(textView, note)
     }
 
     fun decorateTextView (textView: TextView, note: Note) : TextView {
