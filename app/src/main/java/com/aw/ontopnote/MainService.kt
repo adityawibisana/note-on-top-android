@@ -80,18 +80,7 @@ class MainService : Service() {
             }?.let {
                 // TODO: refactor it, move to default text view, using decorateTextView(textView, note) method
 
-                it.visibility = if (event.note.content.isBlank() && !event.note.isHidden) View.GONE else View.VISIBLE
-
-                it.text = if (event.note.isHidden) "" else event.note.content
-
-                DrawableCompat.setTint(
-                    it.background,
-                    Utils.rgbToColorRes(MainApp.applicationContext(), event.note.color)
-                )
-
-                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, event.note.fontSize.toFloat())
-
-                mWindowManager.updateViewLayout(it, mLayoutParams)
+                mWindowManager.updateViewLayout(defaultTextView.decorateTextView(it, event.note), mLayoutParams)
             }
         })
     }
