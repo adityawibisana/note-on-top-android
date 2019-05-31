@@ -4,17 +4,16 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.widget.*
-import com.aw.ontopnote.model.event.UpdateNoteEvent
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.ThreadMode
-import org.greenrobot.eventbus.Subscribe
 import android.util.Log
 import android.view.LayoutInflater
-import androidx.core.content.ContextCompat
+import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.DrawableCompat
 import com.aw.ontopnote.helper.Utils
+import com.aw.ontopnote.model.event.UpdateNoteEvent
 import kotlinx.android.synthetic.main.view_main.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class MainView(context: Context) : RelativeLayout(context) {

@@ -1,18 +1,15 @@
 package com.aw.ontopnote
 
+import CommonUtils
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
-import android.util.TypedValue
 import android.view.Gravity
-import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
-import androidx.core.graphics.drawable.DrawableCompat
-import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.event.UpdateNoteEvent

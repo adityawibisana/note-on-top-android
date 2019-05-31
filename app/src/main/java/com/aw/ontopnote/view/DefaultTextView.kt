@@ -2,23 +2,23 @@ package com.aw.ontopnote.view
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.util.TypedValue
+import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.graphics.drawable.DrawableCompat
 import com.aw.ontopnote.MainApp
+import com.aw.ontopnote.NoteDetailActivity
+import com.aw.ontopnote.R
 import com.aw.ontopnote.helper.SingletonHolder
 import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
-import android.view.GestureDetector
-import android.widget.Toast
-import com.aw.ontopnote.NoteDetailActivity
-import com.aw.ontopnote.R
 import com.aw.ontopnote.model.ViewType
-import android.util.Log
 
 class DefaultTextView private constructor(context: Context) {
 

@@ -1,8 +1,8 @@
 package com.aw.ontopnote
 
+import CommonUtils
 import CommonUtils.runOnDefaultThread
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,15 +10,16 @@ import android.view.View
 import android.widget.Button
 import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.model.ViewType
 import com.aw.ontopnote.view.DefaultTextView
 import kotlinx.android.synthetic.main.activity_note_detail.*
 import kotlinx.android.synthetic.main.dialog_color.*
 import org.greenrobot.eventbus.EventBus
-import com.aw.ontopnote.model.ViewType
 
 class NoteDetailActivity : AppCompatActivity() {
 

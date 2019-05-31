@@ -1,19 +1,20 @@
 package com.aw.ontopnote
 
+import CommonUtils
 import CommonUtils.runOnDefaultThread
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
-import com.aw.ontopnote.model.Note
-import com.aw.ontopnote.model.NoteRepository
+import androidx.appcompat.app.ActionBar.DISPLAY_SHOW_CUSTOM
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import android.util.Log
-import androidx.appcompat.app.ActionBar.DISPLAY_SHOW_CUSTOM
+import com.aw.ontopnote.model.Note
+import com.aw.ontopnote.model.NoteRepository
 import kotlinx.android.synthetic.main.default_action_bar.*
 
 class MainActivity : AppCompatActivity() {

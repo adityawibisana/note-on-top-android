@@ -1,10 +1,10 @@
 package com.aw.ontopnote.model
 
+import CommonUtils
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.aw.ontopnote.R
-
-import android.util.Log
 import com.aw.ontopnote.model.event.UpdateNoteEvent
 import org.greenrobot.eventbus.EventBus
 
