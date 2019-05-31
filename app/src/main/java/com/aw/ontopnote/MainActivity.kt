@@ -13,6 +13,8 @@ import com.aw.ontopnote.model.NoteRepository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import android.util.Log
+import androidx.appcompat.app.ActionBar.DISPLAY_SHOW_CUSTOM
+import kotlinx.android.synthetic.main.default_action_bar.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +43,12 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-
+        supportActionBar?.displayOptions = DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setCustomView(R.layout.default_action_bar)
+        ic_settings.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java) 
+            startActivity(intent)
+        }
     }
 
     private fun checkDrawOverlayPermission() {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OnTopNote</string>
+    <string name="app_name">On Top Note</string>
 
     <string name="input_note_here">To Do: Being Awesome</string>
     <string name="pick_color">Switch color for this note</string>

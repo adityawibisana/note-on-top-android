@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="margin">12dp</dimen>
-    <dimen name="minimum_clickable">48dp</dimen>
+    <dimen name="margin_small">6dp</dimen>
+    <dimen name="minimum_clickable">36dp</dimen>
     <dimen name="minimum_font_size">12sp</dimen>
     <dimen name="default_font_size">24sp</dimen>
     <dimen name="maximum_font_size">48sp</dimen>
+    <dimen name="action_bar_height">48dp</dimen>
 </resources>
