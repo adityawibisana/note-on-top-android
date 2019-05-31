@@ -11,7 +11,7 @@
               android:layout_marginTop="@dimen/margin"
               android:layout_marginStart="0dp"
               android:id="@+id/text_to_show"
-              style="@style/DefaultText"
+              style="@style/DefaultNoteTextView"
               app:layout_constraintTop_toTopOf="parent"
               app:layout_constraintStart_toStartOf="parent"
               tools:text="This is just for preview"/>

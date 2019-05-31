@@ -6,5 +6,5 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/margin"
           android:layout_marginStart="0dp"
-          style="@style/DefaultText"
+          style="@style/DefaultNoteTextView"
           tools:text="This is just for preview"/>
