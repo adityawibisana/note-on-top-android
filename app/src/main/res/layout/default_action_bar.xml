@@ -9,7 +9,7 @@
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/app_name"
-              android:textSize="@dimen/default_font_size"
+              android:textSize="@dimen/font_size_note_default"
               app:layout_constraintLeft_toLeftOf="parent"
               app:layout_constraintTop_toTopOf="parent"
               app:layout_constraintBottom_toBottomOf="parent" />
