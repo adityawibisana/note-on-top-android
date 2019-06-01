@@ -6,10 +6,11 @@
     <dimen name="minimum_clickable">36dp</dimen>
 
     <dimen name="font_size_minimum">12sp</dimen>
-
+    <dimen name="font_size_default">18sp</dimen>
     <dimen name="font_size_maximum">48sp</dimen>
 
     <dimen name="font_size_note_default">24sp</dimen>
 
     <dimen name="action_bar_height">48dp</dimen>
+    <dimen name="scrollbar_width">90dp</dimen>
 </resources>

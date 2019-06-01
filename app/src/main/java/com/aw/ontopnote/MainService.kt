@@ -12,6 +12,7 @@ import android.view.WindowManager
 import android.widget.TextView
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.model.event.NotePaddingSizeSettingChangedEvent
 import com.aw.ontopnote.model.event.UpdateNoteEvent
 import com.aw.ontopnote.view.DefaultTextView
 import org.greenrobot.eventbus.EventBus
@@ -78,6 +79,15 @@ class MainService : Service() {
                 // TODO: refactor it, move to default text view, using decorateTextView(textView, note) method
 
                 mWindowManager.updateViewLayout(defaultTextView.decorateTextView(it, event.note), mLayoutParams)
+            }
+        })
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNotePaddingSizeSettingChangedEvent(event: NotePaddingSizeSettingChangedEvent) {
+        CommonUtils.runOnDefaultThread({
+            textViews.forEach {
+                mWindowManager.updateViewLayout(defaultTextView.decorateTextView(it, it.tag as Note), mLayoutParams)
             }
         })
     }
