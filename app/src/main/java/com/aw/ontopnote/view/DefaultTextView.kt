@@ -14,8 +14,8 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
+import com.aw.ontopnote.helper.Constants
 import com.aw.ontopnote.helper.SingletonHolder
-import com.aw.ontopnote.helper.UserPreferences
 import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
@@ -109,7 +109,11 @@ class DefaultTextView private constructor(context: Context) {
 
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, note.fontSize.toFloat())
 
-        val paddingSize = UserPreferences.getNotePaddingSize()
+        var paddingSize = Constants.DEFAULT_NOTE_PADDING_SIZE * note.fontSize / Constants.MAXIMUM_NOTE_FONT_SIZE
+        if (paddingSize < Constants.MINIMUM_NOTE_PADDING_SIZE) {
+            paddingSize = Constants.MINIMUM_NOTE_PADDING_SIZE
+        }
+
         textView.setPadding(0, paddingSize, paddingSize, paddingSize)
 
         return textView

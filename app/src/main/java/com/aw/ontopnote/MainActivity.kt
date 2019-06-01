@@ -44,12 +44,14 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        /** Temporarily hide feature to change custom note's padding size
         supportActionBar?.displayOptions = DISPLAY_SHOW_CUSTOM
         supportActionBar?.setCustomView(R.layout.default_action_bar)
         ic_settings.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java) 
             startActivity(intent)
         }
+        **/
     }
 
     private fun checkDrawOverlayPermission() {
