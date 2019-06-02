@@ -1,6 +1,7 @@
 package com.aw.ontopnote.view
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -37,6 +38,7 @@ class DefaultTextView private constructor(context: Context) {
         const val TAG = "DefaultTextView"
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun generateTextView(note: Note): TextView {
         var textView = inflater.inflate(com.aw.ontopnote.R.layout.view_default_text_view, null) as TextView
         textView.tag = note
