@@ -1,5 +1,6 @@
 package com.aw.ontopnote.view
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.animation.doOnEnd
 import androidx.core.graphics.drawable.DrawableCompat
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.NoteDetailActivity
@@ -45,6 +47,8 @@ class DefaultTextView private constructor(context: Context) {
             override fun onSingleTapUp(e: MotionEvent?): Boolean { return false }
 
             override fun onDown(e: MotionEvent?): Boolean {
+                Log.v(TAG, "note OnDown")
+
                 //ensure we get the latest note pointer
                 val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
 
@@ -93,14 +97,24 @@ class DefaultTextView private constructor(context: Context) {
     fun decorateTextView (textView: TextView, note: Note) : TextView {
         Log.v(TAG, "note.viewType:${note.viewType}")
 
-        textView.visibility = when (note.viewType) {
-            ViewType.GONE -> View.GONE
-            else -> {
-                if (note.content.isBlank() && note.viewType != ViewType.PARTIALLY_HIDDEN) View.GONE else View.VISIBLE
+        when (note.viewType) {
+            ViewType.GONE -> textView.visibility = View.GONE
+            ViewType.PARTIALLY_HIDDEN -> {
+                textView.visibility = View.VISIBLE
+
+                textView.animate()
+                    .x(-1 * textView.width + 42f)
+                    .setDuration(300)
+                    .withEndAction {
+                        textView.text = " "
+                        textView.x = 0f
+                    }.start()
+            }
+            ViewType.VISIBLE -> {
+                textView.visibility = View.VISIBLE
+                textView.text = note.content
             }
         }
-
-        textView.text = if (note.viewType == ViewType.PARTIALLY_HIDDEN) "" else note.content
 
         DrawableCompat.setTint(
             textView.background,
@@ -113,6 +127,7 @@ class DefaultTextView private constructor(context: Context) {
         if (paddingSize < Constants.MINIMUM_NOTE_PADDING_SIZE) {
             paddingSize = Constants.MINIMUM_NOTE_PADDING_SIZE
         }
+        Log.v(TAG, "paddingSize:$paddingSize")
 
         textView.setPadding(0, paddingSize, paddingSize, paddingSize)
 
