@@ -11,4 +11,5 @@
     <string name="padding_size">Padding size</string>
     <string name="close">Close</string>
     <string name="pick_padding_size">Change Note\'s padding size</string>
+    <string name="allow_draw_over_other_app_permission">Please allow permission for "Display over other apps"</string>
 </resources>
