@@ -11,8 +11,7 @@
              <!--android:id="@+id/tv_note"-->
              <!--android:visibility="gone" />-->
 
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
+    <TextView style="@style/DefaultTextView"
               android:id="@+id/tv_always_show"
               android:text="@string/make_this_note_sticky"
               android:padding="@dimen/margin"
@@ -29,8 +28,7 @@
                   app:layout_constraintBottom_toTopOf="@id/tv_font_size"
                   android:id="@+id/tb_always_show"  />
 
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
+    <TextView style="@style/DefaultTextView"
               android:text="@string/font_size"
               android:padding="@dimen/margin"
               android:id="@+id/tv_font_size"
