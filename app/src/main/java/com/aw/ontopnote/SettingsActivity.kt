@@ -12,7 +12,7 @@ import com.aw.ontopnote.model.event.NotePaddingSizeSettingChangedEvent
 import kotlinx.android.synthetic.main.activity_setting.*
 import org.greenrobot.eventbus.EventBus
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
 
     private val dialog: AlertDialog by lazy {
         AlertDialog.Builder(this)

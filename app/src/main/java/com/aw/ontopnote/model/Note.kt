@@ -24,7 +24,10 @@ data class Note (
     var viewType: Int = VISIBLE,
 
     @ColumnInfo
-    var fontSize: Int = 24
+    var fontSize: Int = 24,
+
+    @ColumnInfo
+    var textColor: Int = ContextCompat.getColor(MainApp.applicationContext(), R.color.textColorDark)
 )
 
 class ViewType {

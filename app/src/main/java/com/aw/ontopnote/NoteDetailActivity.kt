@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_note_detail.*
 import kotlinx.android.synthetic.main.dialog_color.*
 import org.greenrobot.eventbus.EventBus
 
-class NoteDetailActivity : AppCompatActivity() {
+class NoteDetailActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_NOTE_ID = "extraNoteId"
