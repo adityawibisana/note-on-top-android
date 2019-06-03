@@ -3,8 +3,9 @@
           xmlns:dist="http://schemas.android.com/apk/distribution"
           package="com.aw.ontopnote">
 
-    <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <dist:module dist:instant="true"/>
 
@@ -27,6 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <meta-data
+                android:name="io.fabric.ApiKey"
+                android:value="2cb12d89a019206fdd96cd4bcc996b113beb419e" />
 
         <service
                 android:name=".MainService"

@@ -18,6 +18,8 @@ import com.aw.ontopnote.view.DefaultTextView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 
 class MainService : Service() {
 
@@ -55,6 +57,10 @@ class MainService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+
+        CommonUtils.runOnDefaultThread({
+            Fabric.with(this, Crashlytics())
+        })
 
         mLayoutParams.gravity = Gravity.START or Gravity.TOP
 
