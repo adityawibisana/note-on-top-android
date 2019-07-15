@@ -19,6 +19,9 @@ import com.aw.ontopnote.model.ViewType
 import com.aw.ontopnote.view.DefaultTextView
 import kotlinx.android.synthetic.main.activity_note_detail.*
 import kotlinx.android.synthetic.main.dialog_color.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 class NoteDetailActivity : BaseActivity() {
@@ -35,7 +38,7 @@ class NoteDetailActivity : BaseActivity() {
     private val textWatcher: TextWatcher by lazy {
         object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                runOnDefaultThread({
+                launch (Default) {
                     if (::note.isInitialized) {
                         note.content = s.toString()
 
@@ -46,7 +49,7 @@ class NoteDetailActivity : BaseActivity() {
 
                         NoteRepository.updateNote(applicationContext, note)
                     }
-                })
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -70,7 +73,7 @@ class NoteDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note_detail)
 
-        CommonUtils.runOnDefaultThread({
+        launch (Default) {
             note = NoteRepository.getNoteById(MainApp.applicationContext(), intent.getStringExtra(EXTRA_NOTE_ID))
 //            val noteTextView = tv_note as TextView
 //            defaultTextView.decorateTextView(noteTextView, note)
@@ -100,7 +103,7 @@ class NoteDetailActivity : BaseActivity() {
                 NoteRepository.updateNote(applicationContext, note)
             }
 
-        })
+        }
     }
 
     override fun onResume() {
@@ -123,16 +126,16 @@ class NoteDetailActivity : BaseActivity() {
             return
         }
 
-        CommonUtils.runOnDefaultThread({
+        launch (Default) {
             for (b in dialog.dialog_color_root.children) {
                 if (b is Button) b.setOnClickListener {
                     val color = (it.background as ColorDrawable).color
 
-                    note.color = Utils.rgbToColorRes(this, color)
+                    note.color = Utils.rgbToColorRes(this@NoteDetailActivity, color)
 
                     NoteRepository.updateNote(applicationContext, note)
                 }
             }
-        })
+        }
     }
 }

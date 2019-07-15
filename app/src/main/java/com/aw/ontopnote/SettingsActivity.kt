@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.aw.ontopnote.helper.UserPreferences
 import com.aw.ontopnote.model.event.NotePaddingSizeSettingChangedEvent
 import kotlinx.android.synthetic.main.activity_setting.*
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 class SettingsActivity : BaseActivity() {
@@ -49,13 +52,13 @@ class SettingsActivity : BaseActivity() {
         seekBar?.max = 24
         seekBar?.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
-                CommonUtils.runOnDefaultThread({
-                    runOnUiThread {
+                launch (Default) {
+                    launch (Main) {
                         tvSeekBar?.text = "$progress"
                     }
                     UserPreferences.setNotePaddingSize(progress)
                     EventBus.getDefault().post(NotePaddingSizeSettingChangedEvent(progress))
-                })
+                }
             }
 
             override fun onStartTrackingTouch(sb: SeekBar?) { }

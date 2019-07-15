@@ -12,6 +12,8 @@ import androidx.lifecycle.Observer
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import kotlinx.android.synthetic.main.default_action_bar.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
 
@@ -19,24 +21,25 @@ class MainActivity : BaseActivity() {
         const val TAG = "MainActivity"
     }
 
-    lateinit var firstNote: Note
-    lateinit var firstNoteLive: LiveData<Note>
+    private lateinit var firstNote: Note
+    private lateinit var firstNoteLive: LiveData<Note>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        runOnDefaultThread({
+        launch (Dispatchers.Default) {
             firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
 
             firstNoteLive = NoteRepository.getLiveDataNoteById(applicationContext, firstNote.id)
 
-            runOnUiThread {
-                firstNoteLive.observe(this, Observer<Note> {
+            launch (Dispatchers.Main) {
+                firstNoteLive.observe(this@MainActivity, Observer<Note> {
                     Log.v(TAG, "First note is changed, value: ${it.content}")
                 })
             }
-        })
+
+        }
 
         /** Temporarily hide feature to change custom note's padding size
         supportActionBar?.displayOptions = DISPLAY_SHOW_CUSTOM
