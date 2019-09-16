@@ -1,5 +1,6 @@
 package com.aw.ontopnote
 
+import android.content.Context
 import kotlinx.coroutines.*
 import org.junit.Test
 
@@ -26,11 +27,25 @@ class ExampleUnitTest {
             System.out.println("launched coroutine 2")
         }
 
-//        withContext(Dispatchers.Default) {
-//
-//        }
+        hardCalculation()
+        runBlocking {
+            withContext(Dispatchers.Default) {
+                hardCalculation2()
+            }
+        }
 
         System.out.println("end coroutine")
+    }
 
+    private fun hardCalculation() = runBlocking {
+        withContext(Dispatchers.Default) {
+            delay(2000)
+            System.out.println("launched coroutine inside run blocking")
+        }
+    }
+
+    private suspend fun hardCalculation2() : Int {
+        System.out.println("launched coroutine after delay")
+        return 2000
     }
 }
