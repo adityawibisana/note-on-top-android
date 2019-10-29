@@ -35,7 +35,12 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.google.android:flexbox:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    api ('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
+
+    implementation('io.socket:socket.io-client:1.0.0') {
+        exclude group: 'org.json', module: 'json'
+    }
+
+    api('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true
     }
 

@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.network.SocketManager
 import kotlinx.android.synthetic.main.default_action_bar.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,7 +39,6 @@ class MainActivity : BaseActivity() {
                     Log.v(TAG, "First note is changed, value: ${it.content}")
                 })
             }
-
         }
 
         /** Temporarily hide feature to change custom note's padding size
@@ -49,6 +49,12 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
         **/
+
+        CommonUtils.runOnDefaultThread({
+            SocketManager.connect()
+
+        })
+
     }
 
     fun addNote(v: View) {
