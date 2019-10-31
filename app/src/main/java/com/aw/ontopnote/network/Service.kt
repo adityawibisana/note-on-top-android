@@ -25,5 +25,12 @@ object Service {
         @FormUrlEncoded
         @POST("signup")
         fun signUp(@Field("email") email: String, @Field("password") password: String) : Call<User>
+
+        @FormUrlEncoded
+        @POST("login")
+        fun login(@Field("email") email: String,
+                  @Field("password") password: String,
+                  @Field("device") device: String,
+                  @Field("os") os: String) : Call<User>
     }
 }

@@ -8,6 +8,7 @@ object SharedPref {
     private const val EMAIL = "email"
     private const val ID = "id"
     private const val PASSWORD = "password"
+    private const val TOKEN = "token"
 
     private val pref : SharedPreferences by lazy {
         MainApp.applicationContext().getSharedPreferences("default", Context.MODE_PRIVATE)
@@ -29,5 +30,11 @@ object SharedPref {
     get() = pref.getString(PASSWORD, null)
     set (value) {
         pref.edit().putString(PASSWORD, value).apply()
+    }
+
+    var token: String ?
+    get() = pref.getString(TOKEN, null)
+    set (value) {
+        pref.edit().putString(TOKEN, value).apply()
     }
 }
