@@ -79,6 +79,7 @@ class LoginActivity : BaseActivity() {
         launch (Main) {
             val intent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(intent)
+            finishAffinity()
         }
     }
 }
