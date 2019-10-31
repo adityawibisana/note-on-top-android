@@ -10,6 +10,7 @@ import com.aw.ontopnote.helper.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
@@ -47,9 +48,11 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope {
             if (Utils.canDrawOverlays(this@BaseActivity)) {
                 startService(Intent(applicationContext, MainService::class.java))
             } else {
-                val uri = Uri.parse("package:$packageName")
-                startActivityForResult(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri), REQUEST_CODE)
-                Toast.makeText(this@BaseActivity, R.string.allow_draw_over_other_app_permission, Toast.LENGTH_LONG).show()
+                launch (Main) {
+                    Toast.makeText(this@BaseActivity, R.string.allow_draw_over_other_app_permission, Toast.LENGTH_LONG).show()
+                    val uri = Uri.parse("package:$packageName")
+                    startActivityForResult(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri), REQUEST_CODE)
+                }
             }
         }
     }

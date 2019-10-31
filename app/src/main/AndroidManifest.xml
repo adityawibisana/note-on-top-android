@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:dist="http://schemas.android.com/apk/distribution"
-          package="com.aw.ontopnote">
+        xmlns:dist="http://schemas.android.com/apk/distribution"
+        package="com.aw.ontopnote">
 
     <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <dist:module dist:instant="true"/>
+    <dist:module dist:instant="true" />
 
     <application
             android:name=".MainApp"
@@ -17,15 +17,14 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".SettingsActivity">
-        </activity>
-        <activity android:name=".NoteDetailActivity">
-        </activity>
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".NoteDetailActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -36,8 +35,7 @@
         <service
                 android:name=".MainService"
                 android:enabled="true"
-                android:exported="false">
-        </service>
+                android:exported="false"></service>
     </application>
 
 </manifest>
