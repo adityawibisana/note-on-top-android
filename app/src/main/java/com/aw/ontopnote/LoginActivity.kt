@@ -3,6 +3,8 @@ package com.aw.ontopnote
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.aw.ontopnote.model.ErrorResponse
+import com.aw.ontopnote.network.ErrorHandler
 import com.aw.ontopnote.network.Service
 import com.aw.ontopnote.util.SharedPref
 import kotlinx.android.synthetic.main.activity_login.*
@@ -29,9 +31,9 @@ class LoginActivity : BaseActivity() {
                     SharedPref.password = userReq.body()!!.password
                 } else {
                     try {
-                        val error = JSONObject(userReq.errorBody()!!.string())
+                        val errorResponse = ErrorHandler.parse(userReq.errorBody())
                         launch (Main) {
-                            Toast.makeText(this@LoginActivity, error.getString("message"), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@LoginActivity, errorResponse!!.message, Toast.LENGTH_SHORT).show()
                         }
                     } catch (ignored: Exception) { }
                 }
