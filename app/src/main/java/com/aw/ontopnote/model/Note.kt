@@ -15,7 +15,7 @@ data class Note (
     val id:String = UUID.randomUUID().toString(),
 
     @ColumnInfo
-    var content: String,
+    var text: String,
 
     @ColumnInfo
     var color: Int = ContextCompat.getColor(MainApp.applicationContext(), R.color.blueMaterial),

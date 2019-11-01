@@ -1,18 +1,15 @@
 package com.aw.ontopnote
 
 import CommonUtils
-import CommonUtils.runOnDefaultThread
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.ActionBar.DISPLAY_SHOW_CUSTOM
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.network.SocketManager
-import kotlinx.android.synthetic.main.default_action_bar.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -36,7 +33,7 @@ class MainActivity : BaseActivity() {
 
             launch (Dispatchers.Main) {
                 firstNoteLive.observe(this@MainActivity, Observer<Note> {
-                    Log.v(TAG, "First note is changed, value: ${it.content}")
+                    Log.v(TAG, "First note is changed, value: ${it.text}")
                 })
             }
 
@@ -55,7 +52,7 @@ class MainActivity : BaseActivity() {
 
     fun addNote(v: View) {
         CommonUtils.runOnDefaultThread({
-            NoteRepository.insertNote(applicationContext, Note(content = "2nd note"))
+            NoteRepository.insertNote(applicationContext, Note(text = "2nd note"))
         })
     }
 

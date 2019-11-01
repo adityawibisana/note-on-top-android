@@ -51,7 +51,7 @@ class MainView(context: Context) : RelativeLayout(context) {
     @SuppressLint("ResourceType")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: UpdateNoteEvent) {
-        text_to_show.text = event.note.content
+        text_to_show.text = event.note.text
 
         DrawableCompat.setTint(
             text_to_show.background,

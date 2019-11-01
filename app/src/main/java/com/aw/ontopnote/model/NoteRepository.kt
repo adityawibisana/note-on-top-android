@@ -1,6 +1,5 @@
 package com.aw.ontopnote.model
 
-import CommonUtils
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -32,7 +31,7 @@ object NoteRepository: CoroutineScope {
         val noteDao = NotesDatabase.getInstance(context).noteDao()
 
         if (noteDao.count() == 0) {
-            noteDao.insertNote(Note(content = context.getString(R.string.input_note_here)))
+            noteDao.insertNote(Note(text = context.getString(R.string.input_note_here)))
         }
         return noteDao.getFirstNote()
     }

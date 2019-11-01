@@ -1,6 +1,5 @@
 package com.aw.ontopnote.view
 
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -12,7 +11,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.animation.doOnEnd
 import androidx.core.graphics.drawable.DrawableCompat
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.NoteDetailActivity
@@ -112,7 +110,7 @@ class DefaultTextView private constructor(context: Context) {
             }
             ViewType.VISIBLE -> {
                 textView.visibility = View.VISIBLE
-                textView.text = note.content
+                textView.text = note.text
             }
         }
 

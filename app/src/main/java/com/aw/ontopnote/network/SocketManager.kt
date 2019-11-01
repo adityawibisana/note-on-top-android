@@ -30,7 +30,6 @@ object SocketManager  {
                 it.put("url", "$socketURL/join?$query_version&$query_token")
                 socket.emit("put", it)
             }
-
         }.on(Socket.EVENT_ERROR) {
             Log.v(TAG, "Socket connect error:")
         }.on(Socket.EVENT_DISCONNECT) {

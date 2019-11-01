@@ -1,7 +1,6 @@
 package com.aw.ontopnote
 
 import CommonUtils
-import CommonUtils.runOnDefaultThread
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -10,7 +9,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
@@ -19,7 +17,6 @@ import com.aw.ontopnote.model.ViewType
 import com.aw.ontopnote.view.DefaultTextView
 import kotlinx.android.synthetic.main.activity_note_detail.*
 import kotlinx.android.synthetic.main.dialog_color.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -40,7 +37,7 @@ class NoteDetailActivity : BaseActivity() {
             override fun afterTextChanged(s: Editable?) {
                 launch (Default) {
                     if (::note.isInitialized) {
-                        note.content = s.toString()
+                        note.text = s.toString()
 
                         //if it is hidden, stay hidden
                         if (note.viewType != ViewType.GONE) {
@@ -78,7 +75,7 @@ class NoteDetailActivity : BaseActivity() {
 //            val noteTextView = tv_note as TextView
 //            defaultTextView.decorateTextView(noteTextView, note)
 
-            et_note.setText(note.content)
+            et_note.setText(note.text)
 
             val progress = note.fontSize
             sb_font_size.progress = progress
