@@ -39,6 +39,8 @@ class MainActivity : BaseActivity() {
                     Log.v(TAG, "First note is changed, value: ${it.content}")
                 })
             }
+
+            SocketManager.connect()
         }
 
         /** Temporarily hide feature to change custom note's padding size
@@ -49,12 +51,6 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
         **/
-
-        CommonUtils.runOnDefaultThread({
-            SocketManager.connect()
-
-        })
-
     }
 
     fun addNote(v: View) {
