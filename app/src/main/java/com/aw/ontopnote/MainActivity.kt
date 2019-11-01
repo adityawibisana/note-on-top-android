@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
-import com.aw.ontopnote.network.SocketManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -19,25 +18,27 @@ class MainActivity : BaseActivity() {
         const val TAG = "MainActivity"
     }
 
-    private lateinit var firstNote: Note
-    private lateinit var firstNoteLive: LiveData<Note>
+    private val firstNote: Note by lazy {
+        NoteRepository.getOrCreateFirstNote(applicationContext)
+    }
+
+    private val firstNoteLive: LiveData<Note> by lazy {
+        NoteRepository.getLiveDataNoteById(applicationContext, firstNote.id)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         launch (Dispatchers.Default) {
-            firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
-
-            firstNoteLive = NoteRepository.getLiveDataNoteById(applicationContext, firstNote.id)
-
-            launch (Dispatchers.Main) {
-                firstNoteLive.observe(this@MainActivity, Observer<Note> {
-                    Log.v(TAG, "First note is changed, value: ${it.text}")
-                })
+            if (NoteRepository.getNoteCount(this@MainActivity) <= 1) {   
+                launch (Dispatchers.Main) {
+                    firstNoteLive.observe(this@MainActivity, Observer<Note> {
+                        Log.v(TAG, "First note is changed, value: ${it.text}")
+                    })
+                }
+                goToNoteDetail(null)
             }
-
-            SocketManager.connect()
         }
 
         /** Temporarily hide feature to change custom note's padding size
@@ -56,11 +57,9 @@ class MainActivity : BaseActivity() {
         })
     }
 
-    fun goToNoteDetail(v: View) {
-        if (::firstNote.isInitialized) {
-            val intent = Intent(this, NoteDetailActivity::class.java)
-            intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, firstNote.id)
-            startActivity(intent)
-        }
+    fun goToNoteDetail(v: View?) {
+        val intent = Intent(this, NoteDetailActivity::class.java)
+        intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, firstNote.id)
+        startActivity(intent)
     }
 }

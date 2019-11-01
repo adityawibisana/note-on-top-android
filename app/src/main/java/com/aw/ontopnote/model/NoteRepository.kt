@@ -60,4 +60,8 @@ object NoteRepository: CoroutineScope {
         val noteDao = NotesDatabase.getInstance(context).noteDao()
         return noteDao.getAllNotesList()
     }
+
+    fun getNoteCount(context: Context) : Int {
+        return NotesDatabase.getInstance(context).noteDao().count()
+    }
 }
