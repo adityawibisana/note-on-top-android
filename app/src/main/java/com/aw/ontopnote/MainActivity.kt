@@ -40,6 +40,7 @@ class MainActivity : BaseActivity() {
                     })
                 }
                 goToNoteDetail(null)
+                finishAffinity()
             }
         }
 
