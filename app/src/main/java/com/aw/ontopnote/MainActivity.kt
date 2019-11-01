@@ -31,6 +31,8 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
         launch (Dispatchers.Default) {
+            firstNote
+            firstNoteLive
             if (NoteRepository.getNoteCount(this@MainActivity) <= 1) {   
                 launch (Dispatchers.Main) {
                     firstNoteLive.observe(this@MainActivity, Observer<Note> {
