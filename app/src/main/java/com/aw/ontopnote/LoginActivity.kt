@@ -72,16 +72,18 @@ class LoginActivity : BaseActivity() {
                         SocketManager.connect()
                     } else {
                         val errorResponse = ErrorHandler.parse(userReq.errorBody())
-                        launch (Main) {
-                            Toast.makeText(this@LoginActivity, errorResponse!!.message, Toast.LENGTH_SHORT).show()
-                        }
+                        showDefaultErrorToast(errorResponse!!.message)
                     }
                 } catch (exception: Exception) {
-                    launch (Main) {
-                        Toast.makeText(this@LoginActivity, String.format(resources.getString(R.string.login_error), exception.message), Toast.LENGTH_SHORT).show()
-                    }
+                    showDefaultErrorToast(String.format(resources.getString(R.string.login_error), exception.message))
                 }
             }
+        }
+    }
+
+    private fun showDefaultErrorToast(message: String) {
+        launch (Main) {
+            Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
         }
     }
 

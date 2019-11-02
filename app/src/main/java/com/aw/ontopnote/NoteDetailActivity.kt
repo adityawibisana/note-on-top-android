@@ -1,6 +1,7 @@
 package com.aw.ontopnote
 
 import CommonUtils
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -134,5 +135,10 @@ class NoteDetailActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    fun onRegisterLoginClicked(view: View) {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
     }
 }

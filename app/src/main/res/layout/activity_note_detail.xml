@@ -7,9 +7,13 @@
         android:layout_height="match_parent"
         tools:context=".NoteDetailActivity">
 
-    <!--<include layout="@layout/view_default_text_view"-->
-             <!--android:id="@+id/tv_note"-->
-             <!--android:visibility="gone" />-->
+    <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_login"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_always_show"
+            android:onClick="onRegisterLoginClicked"
+            android:text="register / login" />
 
     <TextView style="@style/DefaultTextView"
               android:id="@+id/tv_always_show"
