@@ -51,26 +51,31 @@ class LoginActivity : BaseActivity() {
         launch (Default) {
             if (SharedPref.token == null) {
                 val baseOS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Build.VERSION.BASE_OS else "-"
-                val userReq = Service.onTopNoteService.login(
-                    et_email.text.toString(),
-                    et_password.text.toString(),
-                    "${Build.MANUFACTURER} ${Build.MODEL}",
-                    "$baseOS ${Build.VERSION.SDK_INT}" ).execute()
+                try {
+                    val userReq = Service.onTopNoteService.login(
+                        et_email.text.toString(),
+                        et_password.text.toString(),
+                        "${Build.MANUFACTURER} ${Build.MODEL}",
+                        "$baseOS ${Build.VERSION.SDK_INT}" ).execute()
 
-                if (userReq.isSuccessful) {
-                    SharedPref.id = userReq.body()!!.id
-                    SharedPref.email = userReq.body()!!.email
-                    SharedPref.password = userReq.body()!!.password
-                    SharedPref.token = userReq.body()!!.token
+                    if (userReq.isSuccessful) {
+                        SharedPref.id = userReq.body()!!.id
+                        SharedPref.email = userReq.body()!!.email
+                        SharedPref.password = userReq.body()!!.password
+                        SharedPref.token = userReq.body()!!.token
 
-                    goToNoteActivity()
-                } else {
-                    val errorResponse = ErrorHandler.parse(userReq.errorBody())
+                        goToNoteActivity()
+                    } else {
+                        val errorResponse = ErrorHandler.parse(userReq.errorBody())
+                        launch (Main) {
+                            Toast.makeText(this@LoginActivity, errorResponse!!.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } catch (exception: Exception) {
                     launch (Main) {
-                        Toast.makeText(this@LoginActivity, errorResponse!!.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginActivity, String.format(resources.getString(R.string.login_error), exception.message), Toast.LENGTH_SHORT).show()
                     }
                 }
-
             }
         }
     }
