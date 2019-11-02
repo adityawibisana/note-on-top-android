@@ -17,7 +17,7 @@ object SocketManager  {
         val opts = IO.Options()
         opts.transports = arrayOf(WebSocket.NAME)
 
-        IO.socket("$socketURL?$query_version", opts)
+        IO.socket("$socketURL?$query_version&token=${SharedPref.token}", opts)
     }
 
     private val query_token: String by lazy {

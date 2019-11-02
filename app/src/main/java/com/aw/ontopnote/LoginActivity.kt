@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import com.aw.ontopnote.network.ErrorHandler
 import com.aw.ontopnote.network.Service
+import com.aw.ontopnote.network.SocketManager
 import com.aw.ontopnote.util.SharedPref
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.Dispatchers.Default
@@ -22,6 +23,9 @@ class LoginActivity : BaseActivity() {
             setContentView(R.layout.activity_login)
         } else {
             goToNoteActivity()
+            launch (Default) {
+                SocketManager.connect()
+            }
         }
     }
 
@@ -65,6 +69,7 @@ class LoginActivity : BaseActivity() {
                         SharedPref.token = userReq.body()!!.token
 
                         goToNoteActivity()
+                        SocketManager.connect()
                     } else {
                         val errorResponse = ErrorHandler.parse(userReq.errorBody())
                         launch (Main) {
