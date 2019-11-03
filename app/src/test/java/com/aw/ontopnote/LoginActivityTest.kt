@@ -66,7 +66,4 @@ class LoginTest {
         Thread.sleep(1000)
         assertNull(SharedPref.token)
     }
-
-    @Test
-    fun should
 }
