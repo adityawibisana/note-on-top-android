@@ -19,6 +19,7 @@ import com.aw.ontopnote.view.DefaultTextView
 import kotlinx.android.synthetic.main.activity_note_detail.*
 import kotlinx.android.synthetic.main.dialog_color.*
 import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
@@ -92,9 +93,9 @@ class NoteDetailActivity : BaseActivity() {
                 override fun onStopTrackingTouch(seekBar: SeekBar?) { }
             })
 
-            CommonUtils.runOnUIThread({
+            launch (Main) {
                 tb_always_show.isChecked = note.viewType != ViewType.GONE
-            })
+            }
 
             tb_always_show.setOnCheckedChangeListener { _, isChecked ->
                 note.viewType = if (isChecked) ViewType.VISIBLE else ViewType.GONE

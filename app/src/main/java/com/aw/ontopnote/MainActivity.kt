@@ -54,12 +54,6 @@ class MainActivity : BaseActivity() {
         **/
     }
 
-    fun addNote(v: View) {
-        CommonUtils.runOnDefaultThread({
-            NoteRepository.insertNote(applicationContext, Note(text = "2nd note"))
-        })
-    }
-
     fun goToNoteDetail(v: View?) {
         val intent = Intent(this, NoteDetailActivity::class.java)
         intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, firstNote.id)

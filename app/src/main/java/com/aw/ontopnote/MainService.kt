@@ -1,6 +1,5 @@
 package com.aw.ontopnote
 
-import CommonUtils
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -20,8 +19,18 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class MainService : Service() {
+class MainService : Service(), CoroutineScope {
+    private val job: Job by lazy { Job() }
+
+    override val coroutineContext: CoroutineContext
+        get() = job + Main
 
     private val mWindowManager: WindowManager by lazy {
         (getSystemService( Context.WINDOW_SERVICE) as WindowManager)
@@ -58,43 +67,47 @@ class MainService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        CommonUtils.runOnDefaultThread({
-            Fabric.with(this, Crashlytics())
-        })
+        launch (Default) {
+            Fabric.with(this@MainService, Crashlytics())
+        }
 
         mLayoutParams.gravity = Gravity.START or Gravity.TOP
 
-        CommonUtils.runOnDefaultThread({
+        launch (Default) {
             var notes = NoteRepository.getAllNotes(MainApp.applicationContext())
             for (note in notes) {
-                val textView = defaultTextView.generateTextView(note)
-                mWindowManager.addView(textView, mLayoutParams)
-                textViews.add(textView)
+                launch (Main) {
+                    val textView = defaultTextView.generateTextView(note)
+                    mWindowManager.addView(textView, mLayoutParams)
+                    textViews.add(textView)
+                }
             }
-        })
+        }
 
         EventBus.getDefault().register(this)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: UpdateNoteEvent) {
-        CommonUtils.runOnDefaultThread({
+        launch (Default) {
             textViews.find {
                 (it.tag as Note).id == event.note.id
             }?.let {
                 // TODO: refactor it, move to default text view, using decorateTextView(textView, note) method
 
-                mWindowManager.updateViewLayout(defaultTextView.decorateTextView(it, event.note), mLayoutParams)
+                launch (Main) {
+                    mWindowManager.updateViewLayout(defaultTextView.decorateTextView(it, event.note), mLayoutParams)
+                }
             }
-        })
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNotePaddingSizeSettingChangedEvent(event: NotePaddingSizeSettingChangedEvent) {
-        CommonUtils.runOnDefaultThread({
+        launch (Default) {
             textViews.forEach {
                 mWindowManager.updateViewLayout(defaultTextView.decorateTextView(it, it.tag as Note), mLayoutParams)
             }
-        })
+        }
     }
 }
