@@ -14,6 +14,10 @@ object SharedPref {
         MainApp.applicationContext().getSharedPreferences("default", Context.MODE_PRIVATE)
     }
 
+    fun clearAll() {
+        pref.edit().clear().apply()
+    }
+
     var email: String?
     get() = pref.getString(EMAIL, null)
     set (value) {
@@ -24,12 +28,6 @@ object SharedPref {
     get() = pref.getInt(ID, 0)
     set (value) {
         pref.edit().putInt(ID, value).apply()
-    }
-
-    var password: String?
-    get() = pref.getString(PASSWORD, null)
-    set (value) {
-        pref.edit().putString(PASSWORD, value).apply()
     }
 
     var token: String ?

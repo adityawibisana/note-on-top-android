@@ -36,7 +36,6 @@ class LoginActivity : BaseActivity() {
                 if (userReq.isSuccessful) {
                     SharedPref.id = userReq.body()!!.id
                     SharedPref.email = userReq.body()!!.email
-                    SharedPref.password = userReq.body()!!.password
                 } else {
                     val errorResponse = ErrorHandler.parse(userReq.errorBody())
                     launch (Main) {
@@ -65,7 +64,6 @@ class LoginActivity : BaseActivity() {
                     if (userReq.isSuccessful) {
                         SharedPref.id = userReq.body()!!.id
                         SharedPref.email = userReq.body()!!.email
-                        SharedPref.password = userReq.body()!!.password
                         SharedPref.token = userReq.body()!!.token
 
                         goToNoteActivity()
