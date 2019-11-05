@@ -17,6 +17,8 @@ import kotlin.coroutines.CoroutineContext
 
 @SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity(), CoroutineScope {
+    var isPaused = false
+
     companion object {
         const val REQUEST_CODE = 1
     }
@@ -28,7 +30,13 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onResume() {
         super.onResume()
+        isPaused = false
         showPermissionOrProceedToApp()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isPaused = true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

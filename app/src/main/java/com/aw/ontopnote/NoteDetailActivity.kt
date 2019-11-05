@@ -1,6 +1,5 @@
 package com.aw.ontopnote
 
-import CommonUtils
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -8,14 +7,16 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
+import android.widget.CompoundButton
 import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.aw.ontopnote.helper.Utils
-import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.ViewType
-import com.aw.ontopnote.view.DefaultTextView
+import com.aw.ontopnote.viewmodel.NoteDetailViewModel
 import kotlinx.android.synthetic.main.activity_note_detail.*
 import kotlinx.android.synthetic.main.dialog_color.*
 import kotlinx.coroutines.Dispatchers.Default
@@ -30,29 +31,40 @@ class NoteDetailActivity : BaseActivity() {
         const val TAG = "NoteDetailActivity"
     }
 
-    private val defaultTextView: DefaultTextView by lazy {
-        DefaultTextView.getInstance(this)
-    }
+    private lateinit var model: NoteDetailViewModel
 
     private val textWatcher: TextWatcher by lazy {
         object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 launch (Default) {
-                    if (::note.isInitialized) {
-                        note.text = s.toString()
-
-                        //if it is hidden, stay hidden
-                        if (note.viewType != ViewType.GONE) {
-                            note.viewType = ViewType.VISIBLE
-                        }
-
-                        NoteRepository.updateNote(applicationContext, note)
+                    if (::model.isInitialized) {
+                        model.updateNote(text = s.toString())
                     }
                 }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        }
+    }
+
+    private val seekBarFontSizeChangeListener: SeekBar.OnSeekBarChangeListener by lazy {
+        object: SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (::model.isInitialized) {
+                    model.updateNote(fontSize = progress)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) { }
+            override fun onStopTrackingTouch(seekBar: SeekBar?) { }
+        }
+    }
+
+    private val onStickyNoteChangedListener: CompoundButton.OnCheckedChangeListener by lazy {
+        CompoundButton.OnCheckedChangeListener { _, isChecked ->
+            val viewType = if (isChecked) ViewType.VISIBLE else ViewType.GONE
+            model.updateNote(viewType = viewType)
         }
     }
 
@@ -66,53 +78,44 @@ class NoteDetailActivity : BaseActivity() {
             .show()
     }
 
-    private lateinit var note: Note
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note_detail)
 
         launch (Default) {
-            note = NoteRepository.getNoteById(MainApp.applicationContext(), intent.getStringExtra(EXTRA_NOTE_ID))
-//            val noteTextView = tv_note as TextView
-//            defaultTextView.decorateTextView(noteTextView, note)
-
-            et_note.setText(note.text)
-
-            val progress = note.fontSize
-            sb_font_size.progress = progress
-
-            // TODO: update the value based on current note seek bar progress.
-            sb_font_size.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    note.fontSize = progress
-                    NoteRepository.updateNote(applicationContext, note)
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) { }
-                override fun onStopTrackingTouch(seekBar: SeekBar?) { }
-            })
+            val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
+            model = ViewModelProviders.of(this@NoteDetailActivity)[NoteDetailViewModel::class.java]
+            model.setNoteIdValue(noteId)
 
             launch (Main) {
-                tb_always_show.isChecked = note.viewType != ViewType.GONE
+                model.note.observe(this@NoteDetailActivity, Observer {
+                    sb_font_size.progress = it.fontSize
+                    tb_always_show.isChecked = it.viewType != ViewType.GONE
+                })
             }
-
-            tb_always_show.setOnCheckedChangeListener { _, isChecked ->
-                note.viewType = if (isChecked) ViewType.VISIBLE else ViewType.GONE
-                NoteRepository.updateNote(applicationContext, note)
-            }
-
         }
     }
 
     override fun onResume() {
         super.onResume()
         et_note.addTextChangedListener(textWatcher)
+        sb_font_size.setOnSeekBarChangeListener(seekBarFontSizeChangeListener)
+        tb_always_show.setOnCheckedChangeListener(onStickyNoteChangedListener)
+
+        launch (Default) {
+            val note = NoteRepository.getNoteById(this@NoteDetailActivity, intent.getStringExtra(EXTRA_NOTE_ID))
+            launch (Main) {
+                et_note.setText(note.text)
+            }
+        }
     }
 
     override fun onPause() {
         super.onPause()
         et_note.removeTextChangedListener(textWatcher)
+        sb_font_size.setOnSeekBarChangeListener(null)
+        tb_always_show.setOnCheckedChangeListener(null)
+
         EventBus.getDefault().unregister(this)
     }
 
@@ -121,7 +124,7 @@ class NoteDetailActivity : BaseActivity() {
             dialog.show()
         }
 
-        if (!::note.isInitialized) {
+        if (!::model.isInitialized) {
             return
         }
 
@@ -129,10 +132,7 @@ class NoteDetailActivity : BaseActivity() {
             for (b in dialog.dialog_color_root.children) {
                 if (b is Button) b.setOnClickListener {
                     val color = (it.background as ColorDrawable).color
-
-                    note.color = Utils.rgbToColorRes(this@NoteDetailActivity, color)
-
-                    NoteRepository.updateNote(applicationContext, note)
+                    model.updateNote(color = Utils.rgbToColorRes(this@NoteDetailActivity, color))
                 }
             }
         }
