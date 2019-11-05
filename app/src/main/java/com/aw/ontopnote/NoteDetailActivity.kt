@@ -31,15 +31,15 @@ class NoteDetailActivity : BaseActivity() {
         const val TAG = "NoteDetailActivity"
     }
 
-    private lateinit var model: NoteDetailViewModel
+    private val model: NoteDetailViewModel by lazy {
+        ViewModelProviders.of(this@NoteDetailActivity)[NoteDetailViewModel::class.java]
+    }
 
     private val textWatcher: TextWatcher by lazy {
         object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 launch (Default) {
-                    if (::model.isInitialized) {
-                        model.updateNote(text = s.toString())
-                    }
+                    model.updateNote(text = s.toString())
                 }
             }
 
@@ -51,9 +51,7 @@ class NoteDetailActivity : BaseActivity() {
     private val seekBarFontSizeChangeListener: SeekBar.OnSeekBarChangeListener by lazy {
         object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (::model.isInitialized) {
-                    model.updateNote(fontSize = progress)
-                }
+                model.updateNote(fontSize = progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) { }
@@ -84,7 +82,6 @@ class NoteDetailActivity : BaseActivity() {
 
         launch (Default) {
             val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
-            model = ViewModelProviders.of(this@NoteDetailActivity)[NoteDetailViewModel::class.java]
             model.setNoteIdValue(noteId)
 
             launch (Main) {
@@ -122,10 +119,6 @@ class NoteDetailActivity : BaseActivity() {
     fun showColorDialog(v: View) {
         if (!dialog.isShowing) {
             dialog.show()
-        }
-
-        if (!::model.isInitialized) {
-            return
         }
 
         launch (Default) {
