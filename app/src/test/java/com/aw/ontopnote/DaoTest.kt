@@ -30,6 +30,20 @@ class DaoTest {
 
             println("Executed through here")
         }
+    }
 
+    @Test
+    fun update() {
+        runBlocking {
+            val updatedText = "Note is Updated"
+            val note = NoteRepository.getOrCreateFirstNote(context)
+            note.text = updatedText
+            NoteRepository.updateNote(context, note)
+
+            val noteDB = NoteRepository.getNoteById(context, note.id)
+            assertEquals(updatedText, noteDB.text)
+
+            println("Executed through here")
+        }
     }
 }
