@@ -6,29 +6,29 @@ import androidx.room.*
 @Dao
 interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :id")
-    fun getNoteById(id: String): Note
+    suspend fun getNoteById(id: String): Note
 
     @Query("SELECT * FROM notes WHERE id = :id")
     fun getLiveDataNoteById(id: String): LiveData<Note>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertNote(note: Note)
+    suspend fun insertNote(note: Note)
 
     @Query("DELETE FROM notes")
-    fun deleteAllNotes()
+    suspend fun deleteAllNotes()
 
     @Query("SELECT * FROM notes")
     fun getAllNotes(): LiveData<List<Note>>
 
     @Query("SELECT * FROM notes")
-    fun getAllNotesList(): List<Note>
+    suspend fun getAllNotesList(): List<Note>
 
     @Query("SELECT COUNT(*) FROM notes")
-    fun count(): Int
+    suspend fun count(): Int
 
     @Query("SELECT * FROM notes LIMIT 1")
-    fun getFirstNote(): Note
+    suspend fun getFirstNote(): Note
 
     @Update
-    fun update(note: Note)
+    suspend fun update(note: Note)
 }

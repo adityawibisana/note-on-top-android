@@ -2,7 +2,11 @@ import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
-import android.util.Log 
+import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlin.coroutines.CoroutineContext
 
 object CommonUtils {
     private const val TAG = "CommonUtils"
@@ -12,6 +16,8 @@ object CommonUtils {
         handlerThread.start()
         Handler(handlerThread.looper)
     }
+
+    private val job: Job by lazy { Job() }
 
     private const val WHAT_IS_RUNNING : Int = 1
 
@@ -56,6 +62,13 @@ object CommonUtils {
                 Log.v(TAG, "All thread is busy. Retrying...")
 
             } while (filtered == -1)
+        }
+    }
+
+    val defaultScope: CoroutineScope by lazy {
+        object: CoroutineScope {
+            override val coroutineContext: CoroutineContext
+                get() = job + Dispatchers.Main
         }
     }
 

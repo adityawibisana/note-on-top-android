@@ -1,5 +1,6 @@
 package com.aw.ontopnote.view
 
+import CommonUtils.defaultScope
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,8 @@ import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.ViewType
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.launch
 
 class DefaultTextView private constructor(context: Context) {
 
@@ -50,10 +53,12 @@ class DefaultTextView private constructor(context: Context) {
                 Log.v(TAG, "note OnDown")
 
                 //ensure we get the latest note pointer
-                val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
+                defaultScope.launch (Default) {
+                    val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
 
-                latestNote.viewType = if (latestNote.viewType == ViewType.PARTIALLY_HIDDEN) ViewType.VISIBLE else ViewType.PARTIALLY_HIDDEN
-                NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
+                    latestNote.viewType = if (latestNote.viewType == ViewType.PARTIALLY_HIDDEN) ViewType.VISIBLE else ViewType.PARTIALLY_HIDDEN
+                    NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
+                }
                 return true
             }
 
@@ -68,9 +73,11 @@ class DefaultTextView private constructor(context: Context) {
                 intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, note.id)
 
                 //ensure we get the latest note pointer
-                val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
-                latestNote.viewType = ViewType.VISIBLE
-                NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
+                defaultScope.launch (Default) {
+                    val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
+                    latestNote.viewType = ViewType.VISIBLE
+                    NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
+                }
 
                 textView.context.startActivity(intent)
                 Toast.makeText(textView.context, R.string.pending_wait_note_detail, Toast.LENGTH_LONG).show()

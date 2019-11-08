@@ -1,6 +1,5 @@
 package com.aw.ontopnote
 
-import CommonUtils
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +9,7 @@ import androidx.lifecycle.Observer
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
@@ -18,21 +18,16 @@ class MainActivity : BaseActivity() {
         const val TAG = "MainActivity"
     }
 
-    private val firstNote: Note by lazy {
-        NoteRepository.getOrCreateFirstNote(applicationContext)
-    }
-
-    private val firstNoteLive: LiveData<Note> by lazy {
-        NoteRepository.getLiveDataNoteById(applicationContext, firstNote.id)
-    }
+    private lateinit var firstNote: Note
+    private lateinit var firstNoteLive: LiveData<Note>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        launch (Dispatchers.Default) {
-            firstNote
-            firstNoteLive
+        launch (Default) {
+            firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
+            firstNoteLive = NoteRepository.getLiveDataNoteById(applicationContext, firstNote.id)
             if (NoteRepository.getNoteCount(this@MainActivity) <= 1) {   
                 launch (Dispatchers.Main) {
                     firstNoteLive.observe(this@MainActivity, Observer<Note> {

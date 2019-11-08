@@ -1,5 +1,6 @@
 package com.aw.ontopnote.model
 
+import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -11,7 +12,7 @@ import java.util.*
 
 @Entity(tableName = "notes")
 data class Note (
-    @PrimaryKey @ColumnInfo
+    @PrimaryKey @ColumnInfo @NonNull
     val id:String = UUID.randomUUID().toString(),
 
     @ColumnInfo
