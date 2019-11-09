@@ -55,5 +55,7 @@ object NoteRepository {
         return NotesDatabase.getInstance(context).noteDao().delete(note)
     }
 
-
+    suspend fun deleteAllNotes(context: Context) {
+        NotesDatabase.getInstance(context).noteDao().deleteAllNotes()
+    }
 }

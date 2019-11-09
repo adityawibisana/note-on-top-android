@@ -61,6 +61,19 @@ class DaoTest {
             val deletedNote = NoteRepository.getNoteById(context, createdNoteId)
             assertNull(deletedNote)
         }
+    }
 
+    @Test
+    fun deleteAllNotes() {
+        runBlocking {
+            val note1Id = NoteRepository.insertNote(context, Note(text = ""))
+            assertEquals(note1Id, NoteRepository.getNoteById(context, note1Id).id)
+
+            val note2Id = NoteRepository.insertNote(context, Note(text = ""))
+            assertEquals(note2Id, NoteRepository.getNoteById(context, note2Id).id)
+
+            NoteRepository.deleteAllNotes(context)
+            assertEquals(0, NoteRepository.getAllNotes(context).size)
+        }
     }
 }
