@@ -1,9 +1,9 @@
 package com.aw.ontopnote
 
 import androidx.test.platform.app.InstrumentationRegistry
+import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
+import junit.framework.Assert.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,5 +45,22 @@ class DaoTest {
 
             println("Executed through here")
         }
+    }
+
+    @Test
+    fun delete() {
+        runBlocking {
+            val createdNoteId = NoteRepository.insertNote(context, Note(text = ""))
+            val note = NoteRepository.getNoteById(context, createdNoteId)
+
+            assertNotNull(note)
+            assertEquals(createdNoteId, note.id)
+
+            NoteRepository.deleteNote(context, note)
+
+            val deletedNote = NoteRepository.getNoteById(context, createdNoteId)
+            assertNull(deletedNote)
+        }
+
     }
 }

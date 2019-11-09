@@ -50,4 +50,10 @@ object NoteRepository {
     suspend fun getNoteCount(context: Context) : Int {
         return NotesDatabase.getInstance(context).noteDao().count()
     }
+
+    suspend fun deleteNote(context: Context, note: Note) {
+        return NotesDatabase.getInstance(context).noteDao().delete(note)
+    }
+
+
 }
