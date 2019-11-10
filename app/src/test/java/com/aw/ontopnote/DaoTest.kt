@@ -76,4 +76,17 @@ class DaoTest {
             assertEquals(0, NoteRepository.getAllNotes(context).size)
         }
     }
+
+    @Test
+    fun getAllNotes() {
+        runBlocking {
+            NoteRepository.deleteAllNotes(context)
+            NoteRepository.insertNote(context, Note(text = ""))
+            NoteRepository.insertNote(context, Note(text = ""))
+            NoteRepository.insertNote(context, Note(text = ""))
+
+            val allNotes = NoteRepository.getAllNotes(context)
+            assertEquals(3, allNotes.size)
+        }
+    }
 }
