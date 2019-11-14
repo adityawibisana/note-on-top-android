@@ -23,7 +23,7 @@ class NoteDetailActivityTest {
             val noteText = "TestingNoteText"
             val note = NoteRepository.insertNote(context, Note(text = noteText))
             val intent = Intent()
-            intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, note)
+            intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, note.id)
 
             val rule = ActivityTestRule(NoteDetailActivity::class.java)
 

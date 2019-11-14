@@ -69,7 +69,7 @@ class DaoTest {
     @Test
     fun delete() {
         runBlocking {
-            val createdNoteId = NoteRepository.insertNote(context, Note(text = ""))
+            val createdNoteId = NoteRepository.insertNote(context, Note(text = "")).id
             val note = NoteRepository.getNoteById(context, createdNoteId)
 
             assertNotNull(note)
@@ -85,10 +85,10 @@ class DaoTest {
     @Test
     fun deleteAllNotes() {
         runBlocking {
-            val note1Id = NoteRepository.insertNote(context, Note(text = ""))
+            val note1Id = NoteRepository.insertNote(context, Note(text = "")).id
             assertEquals(note1Id, NoteRepository.getNoteById(context, note1Id).id)
 
-            val note2Id = NoteRepository.insertNote(context, Note(text = ""))
+            val note2Id = NoteRepository.insertNote(context, Note(text = "")).id
             assertEquals(note2Id, NoteRepository.getNoteById(context, note2Id).id)
 
             NoteRepository.deleteAllNotes(context)

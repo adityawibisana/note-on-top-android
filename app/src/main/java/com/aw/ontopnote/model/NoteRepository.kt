@@ -10,9 +10,9 @@ import org.greenrobot.eventbus.EventBus
 object NoteRepository {
     private const val TAG = "NoteRepository"
 
-    suspend fun insertNote(context: Context, note: Note): String {
+    suspend fun insertNote(context: Context, note: Note): Note {
         NotesDatabase.getInstance(context).noteDao().insertNote(note)
-        return note.id
+        return note
     }
 
     suspend fun getOrCreateFirstNote(context: Context) : Note {
