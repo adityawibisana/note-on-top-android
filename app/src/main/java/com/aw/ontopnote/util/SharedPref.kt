@@ -24,10 +24,10 @@ object SharedPref {
         pref.edit().putString(EMAIL, value).apply()
     }
 
-    var id: Int
-    get() = pref.getInt(ID, 0)
+    var id: String?
+    get() = pref.getString(ID, "")
     set (value) {
-        pref.edit().putInt(ID, value).apply()
+        pref.edit().putString(ID, value).apply()
     }
 
     var token: String ?

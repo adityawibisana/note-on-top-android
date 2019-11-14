@@ -48,7 +48,7 @@ class LoginActivityTest {
 
         Thread.sleep(1000)
 
-        assertNotEquals(SharedPref.id, 0)
+        assertNotEquals(SharedPref.id, "")
         assertNotNull(SharedPref.email)
         assertNotNull(SharedPref.token)
     }
@@ -67,7 +67,7 @@ class LoginActivityTest {
 
         Thread.sleep(1000)
 
-        assertNotEquals(SharedPref.id, 0)
+        assertNotEquals(SharedPref.id, "")
         assertNotNull(SharedPref.email)
     }
 }
