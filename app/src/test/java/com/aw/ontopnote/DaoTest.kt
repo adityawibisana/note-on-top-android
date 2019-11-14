@@ -3,15 +3,34 @@ package com.aw.ontopnote
 import androidx.test.platform.app.InstrumentationRegistry
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.model.NotesDatabase
 import junit.framework.Assert.*
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import java.lang.reflect.Field
+
 
 @RunWith(RobolectricTestRunner::class)
 class DaoTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    @After
+    fun finishComponentTesting() {
+        // INSTANCE is the static variable name which holds the singleton instance
+        resetSingleton(NotesDatabase::class.java, "INSTANCE")
+    }
+
+    private fun resetSingleton(clazz: Class<*>, fieldName: String) {
+        val instance: Field
+        try {
+            instance = clazz.getDeclaredField(fieldName)
+            instance.isAccessible = true
+            instance.set(null, null)
+        } catch (e: Exception) { }
+    }
 
     @Test
     fun insert() {
