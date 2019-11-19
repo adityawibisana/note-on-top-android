@@ -38,9 +38,7 @@ class NoteDetailActivity : BaseActivity() {
     private val textWatcher: TextWatcher by lazy {
         object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                launch (Default) {
-                    model.updateNote(text = s.toString())
-                }
+                model.updateNote(text = s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -80,29 +78,24 @@ class NoteDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note_detail)
 
-        launch (Default) {
-            val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
-            model.setNoteIdValue(noteId)
+        val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
+        model.setNoteIdValue(noteId)
 
-            launch (Main) {
-                model.note.observe(this@NoteDetailActivity, Observer {
-                    sb_font_size.progress = it.fontSize
-                    tb_always_show.isChecked = it.viewType != ViewType.GONE
-                })
-            }
-        }
+        model.note.observe(this@NoteDetailActivity, Observer {
+            sb_font_size.progress = it.fontSize
+            tb_always_show.isChecked = it.viewType != ViewType.GONE
+        })
     }
 
     override fun onResume() {
         super.onResume()
-        et_note.addTextChangedListener(textWatcher)
-        sb_font_size.setOnSeekBarChangeListener(seekBarFontSizeChangeListener)
-        tb_always_show.setOnCheckedChangeListener(onStickyNoteChangedListener)
-
         launch (Default) {
             val note = NoteRepository.getNoteById(this@NoteDetailActivity, intent.getStringExtra(EXTRA_NOTE_ID))
             launch (Main) {
                 et_note.setText(note.text)
+                et_note.addTextChangedListener(textWatcher)
+                sb_font_size.setOnSeekBarChangeListener(seekBarFontSizeChangeListener)
+                tb_always_show.setOnCheckedChangeListener(onStickyNoteChangedListener)
             }
         }
     }
@@ -112,8 +105,6 @@ class NoteDetailActivity : BaseActivity() {
         et_note.removeTextChangedListener(textWatcher)
         sb_font_size.setOnSeekBarChangeListener(null)
         tb_always_show.setOnCheckedChangeListener(null)
-
-        EventBus.getDefault().unregister(this)
     }
 
     fun showColorDialog(v: View) {
@@ -121,12 +112,10 @@ class NoteDetailActivity : BaseActivity() {
             dialog.show()
         }
 
-        launch (Default) {
-            for (b in dialog.dialog_color_root.children) {
-                if (b is Button) b.setOnClickListener {
-                    val color = (it.background as ColorDrawable).color
-                    model.updateNote(color = Utils.rgbToColorRes(this@NoteDetailActivity, color))
-                }
+        for (b in dialog.dialog_color_root.children) {
+            if (b is Button) b.setOnClickListener {
+                val color = (it.background as ColorDrawable).color
+                model.updateNote(color = Utils.rgbToColorRes(this@NoteDetailActivity, color))
             }
         }
     }
