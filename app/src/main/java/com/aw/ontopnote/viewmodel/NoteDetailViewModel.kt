@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.network.SocketManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
@@ -23,12 +24,11 @@ class NoteDetailViewModel : ViewModel(), CoroutineScope {
         NoteRepository.getLiveDataNoteById(MainApp.applicationContext(), noteId)
     }
 
-    private lateinit var noteId: String
-
-    fun setNoteIdValue(noteId: String) {
-        launch (Default) {
-            this@NoteDetailViewModel.noteId = noteId
-            note
+    var noteId: String = ""
+    set(value) {
+        if (value != "") {
+            field = value
+            launch (Default) { note }
         }
     }
 
@@ -50,6 +50,14 @@ class NoteDetailViewModel : ViewModel(), CoroutineScope {
                 }
 
                 NoteRepository.updateNote(MainApp.applicationContext(), noteDb)
+            }
+        }
+    }
+
+    fun uploadNote() {
+        launch (Default) {
+            if (note.value != null) {
+                SocketManager.updateNote(note.value!!)
             }
         }
     }

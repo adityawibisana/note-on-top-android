@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.dialog_color.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 class NoteDetailActivity : BaseActivity() {
 
@@ -79,7 +78,7 @@ class NoteDetailActivity : BaseActivity() {
         setContentView(R.layout.activity_note_detail)
 
         val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
-        model.setNoteIdValue(noteId)
+        model.noteId = noteId
 
         model.note.observe(this@NoteDetailActivity, Observer {
             sb_font_size.progress = it.fontSize
