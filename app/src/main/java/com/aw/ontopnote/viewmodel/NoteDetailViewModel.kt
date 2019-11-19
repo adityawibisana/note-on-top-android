@@ -54,6 +54,10 @@ class NoteDetailViewModel : ViewModel(), CoroutineScope {
         }
     }
 
+    suspend fun getNoteValue() : Note {
+        return NoteRepository.getNoteById(MainApp.applicationContext(), noteId)
+    }
+
     fun uploadNote() {
         launch (Default) {
             if (note.value != null) {

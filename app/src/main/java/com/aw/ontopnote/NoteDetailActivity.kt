@@ -13,8 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.aw.ontopnote.helper.Utils
-import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.helper.Utils 
 import com.aw.ontopnote.model.ViewType
 import com.aw.ontopnote.viewmodel.NoteDetailViewModel
 import kotlinx.android.synthetic.main.activity_note_detail.*
@@ -89,7 +88,7 @@ class NoteDetailActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         launch (Default) {
-            val note = NoteRepository.getNoteById(this@NoteDetailActivity, intent.getStringExtra(EXTRA_NOTE_ID))
+            val note = model.getNoteValue()
             launch (Main) {
                 et_note.setText(note.text)
                 et_note.addTextChangedListener(textWatcher)
