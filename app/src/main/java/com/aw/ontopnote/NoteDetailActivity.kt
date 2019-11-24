@@ -113,7 +113,7 @@ class NoteDetailActivity : BaseActivity() {
         for (b in dialog.dialog_color_root.children) {
             if (b is Button) b.setOnClickListener {
                 val color = (it.background as ColorDrawable).color
-                model.updateNote(color = Utils.rgbToColorRes(this@NoteDetailActivity, color))
+                model.updateNote(color = color)
             }
         }
     }

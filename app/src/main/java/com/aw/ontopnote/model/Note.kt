@@ -7,6 +7,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.R
+import com.aw.ontopnote.helper.Themes
 import com.aw.ontopnote.model.ViewType.Companion.VISIBLE
 import java.util.*
 
@@ -19,7 +20,7 @@ data class Note (
     var text: String,
 
     @ColumnInfo
-    var color: Int = ContextCompat.getColor(MainApp.applicationContext(), R.color.blueMaterial),
+    var color: Int = Themes.defaultBackground,
 
     @ColumnInfo
     var viewType: Int = VISIBLE,
@@ -28,10 +29,10 @@ data class Note (
     var fontSize: Int = 24,
 
     @ColumnInfo
-    var textColor: Int = ContextCompat.getColor(MainApp.applicationContext(), R.color.textColorDark),
+    var updatedAt: Int = -1,
 
     @ColumnInfo
-    var updatedAt: Int = -1
+    var remoteId: String = ""
 )
 
 class ViewType {

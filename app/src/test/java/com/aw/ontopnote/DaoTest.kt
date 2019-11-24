@@ -45,7 +45,6 @@ class DaoTest {
             assertEquals(firstNote.color, firstNoteDB.color)
             assertEquals(firstNote.viewType, firstNoteDB.viewType)
             assertEquals(firstNote.fontSize, firstNoteDB.fontSize)
-            assertEquals(firstNote.textColor, firstNoteDB.textColor)
 
             println("Executed through here")
         }

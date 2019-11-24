@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
@@ -55,7 +56,7 @@ class MainView(context: Context) : RelativeLayout(context) {
 
         DrawableCompat.setTint(
             text_to_show.background,
-            Utils.rgbToColorRes(context, event.note.color)
+            event.note.color
         )
 
         if (!isExpanded) {

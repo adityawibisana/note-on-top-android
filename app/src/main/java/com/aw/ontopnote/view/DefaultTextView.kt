@@ -4,6 +4,7 @@ import CommonUtils.defaultScope
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.util.Log
 import android.util.TypedValue
 import android.view.GestureDetector
@@ -123,7 +124,7 @@ class DefaultTextView private constructor(context: Context) {
 
         DrawableCompat.setTint(
             textView.background,
-            Utils.rgbToColorRes(MainApp.applicationContext(), note.color)
+            note.color
         )
 
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, note.fontSize.toFloat())
