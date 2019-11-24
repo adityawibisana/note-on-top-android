@@ -77,12 +77,7 @@ class NoteDetailActivity : BaseActivity() {
         setContentView(R.layout.activity_note_detail)
 
         val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
-        model.noteId = noteId
-
-        model.note.observe(this@NoteDetailActivity, Observer {
-            sb_font_size.progress = it.fontSize
-            tb_always_show.isChecked = it.viewType != ViewType.GONE
-        })
+        model.initialize(noteId)
     }
 
     override fun onResume() {
@@ -91,10 +86,12 @@ class NoteDetailActivity : BaseActivity() {
             val note = model.getNoteValue()
             launch (Main) {
                 et_note.setText(note.text)
-                et_note.addTextChangedListener(textWatcher)
-                sb_font_size.setOnSeekBarChangeListener(seekBarFontSizeChangeListener)
-                tb_always_show.setOnCheckedChangeListener(onStickyNoteChangedListener)
+                sb_font_size.progress = note.fontSize
+                tb_always_show.isChecked = note.viewType != ViewType.GONE
             }
+            et_note.addTextChangedListener(textWatcher)
+            sb_font_size.setOnSeekBarChangeListener(seekBarFontSizeChangeListener)
+            tb_always_show.setOnCheckedChangeListener(onStickyNoteChangedListener)
         }
     }
 
