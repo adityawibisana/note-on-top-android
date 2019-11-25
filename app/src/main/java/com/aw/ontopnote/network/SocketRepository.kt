@@ -11,10 +11,10 @@ object SocketRepository {
         "token=" + SharedPref.token
     }
 
-    fun updateNote(note: Note, socket: Socket, updatedNote: (note: Note) -> Unit) {
+    fun updateNote(note: Note, socket: Socket) {
         JSONObject().also {
             val content = Gson().toJson(note)
-            it.put("url", "$socketURL/updateNote/${note.id}?$query_version&$query_token&text=$content")
+            it.put("url", "$socketURL/updateNote/${note.remoteId}?$query_version&$query_token&noteJSON=$content")
             socket.emit("put", it)
         }
     }
@@ -37,6 +37,20 @@ object SocketRepository {
                     }
                 } catch (ignored: Exception) { }
             }
+        }
+    }
+
+    fun getNote(noteId: String, socket: Socket, callback: (note: Note) -> Unit) {
+        JSONObject().also {
+            it.put("url", "$socketURL/note/$noteId?$query_version&$query_token")
+            socket.once("NOTE_RETRIEVED") { res->
+                try {
+                    val parsedNote = Gson().fromJson(res[0].toString(), Note::class.java)
+                    callback(parsedNote)
+                } catch (ignored: Exception) { }
+            }
+            socket.emit("get", it)
+
         }
     }
 }
