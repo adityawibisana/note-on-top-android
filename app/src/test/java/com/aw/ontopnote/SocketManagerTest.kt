@@ -27,14 +27,14 @@ class SocketManagerTest {
             SocketManager.connect()
             Thread.sleep(2000)
 
-            SocketDBRepository.createNote( Note(text="test")) {
-                val noteDB = NoteRepository.getNoteById(MainApp.applicationContext(), it.id)
+            launch (Default) {
+                val note = SocketDBRepository.createNote( Note(text="test"))
+                val noteDB = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
 
                 //ensure local and id is found
-                assertEquals(noteDB.id, it.id)
-                assertEquals(noteDB.remoteId, it.remoteId)
+                assertEquals(noteDB.id, note.id)
+                assertEquals(noteDB.remoteId, note.remoteId)
                 println("id and remoteId on localDB is now the same with the one from socket")
-
             }
             Thread.sleep(2000)
         }
@@ -49,19 +49,20 @@ class SocketManagerTest {
             SocketManager.connect()
             Thread.sleep(2000)
 
-            SocketDBRepository.createNote( Note(text="test")) {
+            launch (Default) {
+                val createdNote = SocketDBRepository.createNote( Note(text="test"))
                 val updatedText = UUID.randomUUID().toString()
-                it.text = updatedText
-                SocketRepository.updateNote(it, SocketManager.socket)
+                createdNote.text = updatedText
+                SocketRepository.updateNote(createdNote, SocketManager.socket)
                 Thread.sleep(2000)
-                launch (Default) {
-                    val retrievedNote = SocketRepository.getNote(it.remoteId, SocketManager.socket)
-                    assertNotNull(retrievedNote)
-                    assertEquals(updatedText, retrievedNote?.text)
-                    println("retrieved text from server and local is the same")
-                }
+
+                val retrievedNote = SocketRepository.getNote(createdNote.remoteId, SocketManager.socket)
+                assertNotNull(retrievedNote)
+                assertEquals(updatedText, retrievedNote?.text)
+                println("retrieved text from server and local is the same")
             }
-            Thread.sleep(20000)
+
+            Thread.sleep(15000)
         }
     }
 }
