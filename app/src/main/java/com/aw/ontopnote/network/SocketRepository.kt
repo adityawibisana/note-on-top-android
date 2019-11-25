@@ -6,7 +6,7 @@ import io.socket.client.Socket
 import org.json.JSONObject
 import java.lang.Exception
 
-object SocketServiceRepository {
+object SocketRepository {
     val query_token: String by lazy {
         "token=" + SharedPref.token
     }
@@ -24,7 +24,7 @@ object SocketServiceRepository {
      * @param socket the socket, retrieved from SocketManager
      * @param callback the callback after the note has been created
      */
-    fun createNoteAndUpdateDB (note: Note, socket: Socket, callback: (createdNote: Note) -> Unit) {
+    fun createNote (note: Note, socket: Socket, callback: (createdNote: Note) -> Unit) {
         JSONObject().also { it ->
             it.put("url", "$socketURL/createNote?$query_version&$query_token&localId=${note.id}")
             socket.emit("post", it).once("NOTE_CREATED") {

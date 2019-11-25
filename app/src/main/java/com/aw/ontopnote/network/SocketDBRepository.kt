@@ -6,7 +6,7 @@ import com.aw.ontopnote.model.NoteRepository
 
 object SocketDBRepository {
     fun createNote(note: Note, callback: (createdNote: Note) -> Unit) {
-        SocketServiceRepository.createNoteAndUpdateDB(note, SocketManager.socket) {
+        SocketRepository.createNote(note, SocketManager.socket) {
             //ensure it's on DB first
             var noteDB = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
 
