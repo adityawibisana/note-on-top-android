@@ -10,9 +10,8 @@ import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class SocketManagerTest {
     @Test
     fun shouldBeAbleToCreateNote() {
@@ -30,7 +29,6 @@ class SocketManagerTest {
                 assertEquals(noteDB.id, it.id)
                 assertEquals(noteDB.remoteId, it.remoteId)
                 println("id and remoteId on localDB is now the same with the one from socket")
-                Thread.currentThread().interrupt()
 
             }
             Thread.sleep(2000)

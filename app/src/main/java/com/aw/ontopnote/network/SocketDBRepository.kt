@@ -8,14 +8,12 @@ object SocketDBRepository {
     fun createNote(note: Note, callback: (createdNote: Note) -> Unit) {
         SocketRepository.createNote(note, SocketManager.socket) {
             //ensure it's on DB first
-            var noteDB = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
-
             @Suppress("SENSELESS_COMPARISON")
-            if (noteDB == null) {
-                noteDB = NoteRepository.insertNote(MainApp.applicationContext(), it)
+            if (NoteRepository.getNoteById(MainApp.applicationContext(), note.id) == null) {
+                NoteRepository.insertNote(MainApp.applicationContext(), it)
             }
-            NoteRepository.updateNote(MainApp.applicationContext(), noteDB)
-            callback(noteDB)
+            NoteRepository.updateNote(MainApp.applicationContext(), it)
+            callback(it)
         }
     }
 }
