@@ -34,11 +34,10 @@ class NoteDetailViewModel : ViewModel(), CoroutineScope {
 
             if (SharedPref.token != null) {
                 SocketManager.connect()
-            }
-
-            if (note.remoteId == "") {
-                val createdNote = SocketDBRepository.createNote(note)
-                note.remoteId = createdNote.remoteId
+                if (note.remoteId == "") {
+                    val createdNote = SocketDBRepository.createNote(note)
+                    note.remoteId = createdNote.remoteId
+                }
             }
         }
     }

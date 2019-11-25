@@ -26,7 +26,7 @@ object SocketRepository {
      * @param socket the socket, retrieved from SocketManager
      * @param callback the callback after the note has been created
      */
-    fun createNote (note: Note, socket: Socket, callback: (createdNote: Note) -> Unit) {
+    suspend fun createNote (note: Note, socket: Socket) : Note? = suspendCoroutine { continuation ->
         JSONObject().also { it ->
             it.put("url", "$socketURL/createNote?$query_version&$query_token&localId=${note.id}")
             socket.emit("post", it).once("NOTE_CREATED") {
@@ -35,9 +35,11 @@ object SocketRepository {
                     val localId = json.getString("localId")
                     if (localId == note.id) {
                         note.remoteId = json.getString("id")
-                        callback(note)
+                        continuation.resume(note)
                     }
-                } catch (ignored: Exception) { }
+                } catch (ignored: Exception) {
+                    continuation.resume(null)
+                }
             }
         }
     }

@@ -50,7 +50,14 @@ class SocketManagerTest {
             Thread.sleep(2000)
 
             launch (Default) {
-                val createdNote = SocketDBRepository.createNote( Note(text="test"))
+                val createdNote = NoteRepository.insertNote(MainApp.applicationContext(), Note(text="test"))
+                val parsedNoteFromServer = SocketRepository.createNote(createdNote, SocketManager.socket)
+                assertNotNull(parsedNoteFromServer)
+                NoteRepository.updateNote(MainApp.applicationContext(), createdNote)
+                //ensure the DB is writing the remote id
+                val createdNoteOnDB = NoteRepository.getNoteById(MainApp.applicationContext(), createdNote.id)
+                assertEquals(createdNote.remoteId, createdNoteOnDB.remoteId)
+
                 val updatedText = UUID.randomUUID().toString()
                 createdNote.text = updatedText
                 SocketRepository.updateNote(createdNote, SocketManager.socket)
