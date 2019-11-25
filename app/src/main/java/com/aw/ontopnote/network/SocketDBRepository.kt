@@ -12,7 +12,7 @@ object SocketDBRepository {
     suspend fun createNote(note: Note): Note = suspendCoroutine { continuation ->
         val scope = CoroutineScope(continuation.context)
         scope.launch {
-            SocketRepository.createNote(note, SocketManager.socket)
+            SocketDataSource.createNote(note, SocketManager.socket)
             //ensure it's on DB first
             @Suppress("SENSELESS_COMPARISON")
             if (NoteRepository.getNoteById(MainApp.applicationContext(), note.id) == null) {

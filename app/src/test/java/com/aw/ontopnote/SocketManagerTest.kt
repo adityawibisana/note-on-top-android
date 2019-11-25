@@ -5,7 +5,7 @@ import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.network.SocketDBRepository
 import com.aw.ontopnote.network.SocketManager
-import com.aw.ontopnote.network.SocketRepository
+import com.aw.ontopnote.network.SocketDataSource
 import com.aw.ontopnote.util.SharedPref
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
@@ -51,7 +51,7 @@ class SocketManagerTest {
 
             launch (Default) {
                 val createdNote = NoteRepository.insertNote(MainApp.applicationContext(), Note(text="test"))
-                val parsedNoteFromServer = SocketRepository.createNote(createdNote, SocketManager.socket)
+                val parsedNoteFromServer = SocketDataSource.createNote(createdNote, SocketManager.socket)
                 assertNotNull(parsedNoteFromServer)
                 NoteRepository.updateNote(MainApp.applicationContext(), createdNote)
                 //ensure the DB is writing the remote id
@@ -60,10 +60,10 @@ class SocketManagerTest {
 
                 val updatedText = UUID.randomUUID().toString()
                 createdNote.text = updatedText
-                SocketRepository.updateNote(createdNote, SocketManager.socket)
+                SocketDataSource.updateNote(createdNote, SocketManager.socket)
                 Thread.sleep(2000)
 
-                val retrievedNote = SocketRepository.getNote(createdNote.remoteId, SocketManager.socket)
+                val retrievedNote = SocketDataSource.getNote(createdNote.remoteId, SocketManager.socket)
                 assertNotNull(retrievedNote)
                 assertEquals(updatedText, retrievedNote?.text)
                 println("retrieved text from server and local is the same")

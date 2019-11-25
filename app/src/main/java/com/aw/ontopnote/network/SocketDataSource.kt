@@ -8,7 +8,7 @@ import java.lang.Exception
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-object SocketRepository {
+object SocketDataSource {
     val query_token: String by lazy {
         "token=" + SharedPref.token
     }
