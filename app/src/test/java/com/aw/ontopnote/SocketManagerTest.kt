@@ -8,6 +8,9 @@ import com.aw.ontopnote.network.SocketManager
 import com.aw.ontopnote.network.SocketRepository
 import com.aw.ontopnote.util.SharedPref
 import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -51,13 +54,14 @@ class SocketManagerTest {
                 it.text = updatedText
                 SocketRepository.updateNote(it, SocketManager.socket)
                 Thread.sleep(2000)
-                SocketRepository.getNote(it.remoteId, SocketManager.socket) { retrievedNote ->
-                    assertEquals(updatedText, retrievedNote.text)
+                launch (Default) {
+                    val retrievedNote = SocketRepository.getNote(it.remoteId, SocketManager.socket)
+                    assertNotNull(retrievedNote)
+                    assertEquals(updatedText, retrievedNote?.text)
                     println("retrieved text from server and local is the same")
                 }
-
             }
-            Thread.sleep(2000)
+            Thread.sleep(20000)
         }
     }
 }

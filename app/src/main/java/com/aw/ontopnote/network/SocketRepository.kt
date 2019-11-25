@@ -1,10 +1,12 @@
-package com.aw.ontopnote.network
+package com.aw.ontopnote.network 
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.util.SharedPref
 import com.google.gson.Gson
 import io.socket.client.Socket
 import org.json.JSONObject
 import java.lang.Exception
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 object SocketRepository {
     val query_token: String by lazy {
@@ -40,17 +42,18 @@ object SocketRepository {
         }
     }
 
-    fun getNote(noteId: String, socket: Socket, callback: (note: Note) -> Unit) {
+    suspend fun getNote(noteId: String, socket: Socket) : Note? = suspendCoroutine { continuation ->
         JSONObject().also {
             it.put("url", "$socketURL/note/$noteId?$query_version&$query_token")
             socket.once("NOTE_RETRIEVED") { res->
                 try {
                     val parsedNote = Gson().fromJson(res[0].toString(), Note::class.java)
-                    callback(parsedNote)
-                } catch (ignored: Exception) { }
+                    continuation.resume(parsedNote)
+                } catch (ignored: Exception) {
+                    continuation.resume(null)
+                }
             }
             socket.emit("get", it)
-
         }
     }
 }
