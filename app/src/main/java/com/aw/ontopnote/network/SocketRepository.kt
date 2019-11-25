@@ -24,7 +24,7 @@ object SocketRepository {
     /**
      * @param note MUST be created first on db
      * @param socket the socket, retrieved from SocketManager
-     * @param callback the callback after the note has been created
+     * @return parsed note. remoteId will be written to our note object, parsed from server's localId
      */
     suspend fun createNote (note: Note, socket: Socket) : Note? = suspendCoroutine { continuation ->
         JSONObject().also { it ->
