@@ -10,12 +10,12 @@ import org.greenrobot.eventbus.EventBus
 object NoteRepository {
     private const val TAG = "NoteRepository"
 
-    suspend fun insertNote(context: Context, note: Note): Note {
+    fun insertNote(context: Context, note: Note): Note {
         NotesDatabase.getInstance(context).noteDao().insertNote(note)
         return note
     }
 
-    suspend fun getOrCreateFirstNote(context: Context) : Note {
+    fun getOrCreateFirstNote(context: Context) : Note {
         val noteDao = NotesDatabase.getInstance(context).noteDao()
 
         if (noteDao.count() == 0) {
@@ -24,7 +24,7 @@ object NoteRepository {
         return noteDao.getFirstNote()
     }
 
-    suspend fun getNoteById(context: Context, id: String) : Note {
+    fun getNoteById(context: Context, id: String) : Note {
         val noteDao = NotesDatabase.getInstance(context).noteDao()
         return noteDao.getNoteById(id)
     }
@@ -34,7 +34,7 @@ object NoteRepository {
         return noteDao.getLiveDataNoteById(id)
     }
 
-    suspend fun updateNote(context: Context, note: Note) {
+    fun updateNote(context: Context, note: Note) {
         val noteDao = NotesDatabase.getInstance(context).noteDao()
         noteDao.update(note)
 
@@ -42,20 +42,20 @@ object NoteRepository {
         EventBus.getDefault().post(UpdateNoteEvent(note))
     }
 
-    suspend fun getAllNotes(context: Context): List<Note>  {
+    fun getAllNotes(context: Context): List<Note>  {
         val noteDao = NotesDatabase.getInstance(context).noteDao()
         return noteDao.getAllNotesList()
     }
 
-    suspend fun getNoteCount(context: Context) : Int {
+    fun getNoteCount(context: Context) : Int {
         return NotesDatabase.getInstance(context).noteDao().count()
     }
 
-    suspend fun deleteNote(context: Context, note: Note) {
+    fun deleteNote(context: Context, note: Note) {
         return NotesDatabase.getInstance(context).noteDao().delete(note)
     }
 
-    suspend fun deleteAllNotes(context: Context) {
+    fun deleteAllNotes(context: Context) {
         NotesDatabase.getInstance(context).noteDao().deleteAllNotes()
     }
 }

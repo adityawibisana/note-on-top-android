@@ -1,11 +1,13 @@
 package com.aw.ontopnote.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.network.SocketManager
+import com.aw.ontopnote.util.SharedPref
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
@@ -20,49 +22,43 @@ class NoteDetailViewModel : ViewModel(), CoroutineScope {
         get() = job + Dispatchers.Main
 
 
-    val note: LiveData<Note> by lazy {
-        NoteRepository.getLiveDataNoteById(MainApp.applicationContext(), noteId)
-    }
+    lateinit var note: Note
 
     var noteId: String = ""
-    set(value) {
-        if (value != "") {
-            field = value
-            launch (Default) { note }
+
+    fun initialize(noteId: String) {
+        this.noteId = noteId
+        launch (Default) {
+            note = NoteRepository.getNoteById(MainApp.applicationContext(), noteId)
+
+            if (SharedPref.token != null) {
+                SocketManager.connect()
+            }
         }
     }
 
     fun updateNote(fontSize: Int? = null, viewType: Int? = null, color: Int? = null, text: String? = null) {
         launch (Default) {
-            val noteDb = note.value
-            if (noteDb != null) {
+            if (::note.isInitialized) {
                 if (fontSize != null) {
-                    noteDb.fontSize = fontSize
+                    note.fontSize = fontSize
                 }
                 if (viewType != null) {
-                    noteDb.viewType = viewType
+                    note.viewType = viewType
                 }
                 if (color != null) {
-                    noteDb.color = color
+                    note.color = color
                 }
                 if (text != null) {
-                    noteDb.text = text
+                    note.text = text
                 }
 
-                NoteRepository.updateNote(MainApp.applicationContext(), noteDb)
+                NoteRepository.updateNote(MainApp.applicationContext(), note)
             }
         }
     }
 
-    suspend fun getNoteValue() : Note {
+    fun getNoteValue() : Note {
         return NoteRepository.getNoteById(MainApp.applicationContext(), noteId)
-    }
-
-    fun uploadNote() {
-        launch (Default) {
-            if (note.value != null) {
-                SocketManager.updateNote(note.value!!)
-            }
-        }
     }
 }
