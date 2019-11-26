@@ -37,6 +37,7 @@ class NoteDetailActivity : BaseActivity() {
         object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 model.updateNote(text = s.toString())
+                model.uploadNote()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -48,6 +49,7 @@ class NoteDetailActivity : BaseActivity() {
         object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 model.updateNote(fontSize = progress)
+                model.uploadNote()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) { }
@@ -59,6 +61,7 @@ class NoteDetailActivity : BaseActivity() {
         CompoundButton.OnCheckedChangeListener { _, isChecked ->
             val viewType = if (isChecked) ViewType.VISIBLE else ViewType.GONE
             model.updateNote(viewType = viewType)
+            model.uploadNote()
         }
     }
 
@@ -111,6 +114,7 @@ class NoteDetailActivity : BaseActivity() {
             if (b is Button) b.setOnClickListener {
                 val color = (it.background as ColorDrawable).color
                 model.updateNote(color = color)
+                model.uploadNote()
             }
         }
     }

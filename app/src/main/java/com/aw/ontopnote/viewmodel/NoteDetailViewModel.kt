@@ -1,12 +1,11 @@
 package com.aw.ontopnote.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.network.SocketDBRepository
+import com.aw.ontopnote.network.SocketDataSource
 import com.aw.ontopnote.network.SocketManager
 import com.aw.ontopnote.util.SharedPref
 import kotlinx.coroutines.CoroutineScope
@@ -33,10 +32,10 @@ class NoteDetailViewModel : ViewModel(), CoroutineScope {
             note = NoteRepository.getNoteById(MainApp.applicationContext(), noteId)
 
             if (SharedPref.token != null) {
-                SocketManager.connect()
-                if (note.remoteId == "") {
-                    val createdNote = SocketDBRepository.createNote(note)
-                    note.remoteId = createdNote.remoteId
+                if (SocketManager.connect()) {
+                    if (note.remoteId == "") {
+                        note = SocketDBRepository.createNote(note)
+                    }
                 }
             }
         }
@@ -59,6 +58,17 @@ class NoteDetailViewModel : ViewModel(), CoroutineScope {
                 }
 
                 NoteRepository.updateNote(MainApp.applicationContext(), note)
+            }
+        }
+    }
+
+    fun uploadNote() {
+        launch (Default) {
+            if (SharedPref.token != null) {
+                if (note.remoteId == "") {
+                    note = SocketDBRepository.createNote(note)
+                }
+                SocketDataSource.updateNote(note, SocketManager.socket)
             }
         }
     }
