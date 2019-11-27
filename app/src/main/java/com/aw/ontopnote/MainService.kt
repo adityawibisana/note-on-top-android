@@ -1,6 +1,5 @@
 package com.aw.ontopnote
 
-import CommonUtils.defaultScope
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -10,6 +9,7 @@ import android.os.IBinder
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.view.DefaultTextView
@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import kotlin.coroutines.CoroutineContext
 
 class MainService : Service(), CoroutineScope {
@@ -52,6 +53,8 @@ class MainService : Service(), CoroutineScope {
         if (Build.VERSION.SDK_INT >= 26) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE
     }
 
+    lateinit var lastEditedNoteObserver: Observer<Note>
+
     override fun onBind(intent: Intent?): IBinder? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -70,25 +73,46 @@ class MainService : Service(), CoroutineScope {
         mLayoutParams.gravity = Gravity.START or Gravity.TOP
 
         val lastNoteLive = NoteRepository.getLastEditedNoteLive(MainApp.applicationContext())
+        updateObserver()
+        lastNoteLive?.observeForever(lastEditedNoteObserver)
+    }
 
-        println("lastNoteLive is:$lastNoteLive")
-        lastNoteLive?.observeForever { note ->
-            note ?: return@observeForever
+    private fun updateObserver() {
+        lastEditedNoteObserver = Observer { note ->
+            note ?: return@Observer
 
             if (textViews.size == 0) {
-                val textView = defaultTextView.generateTextView(note)
-                mWindowManager.addView(textView, mLayoutParams)
-                textViews.add(textView)
+                addTextViewToWindowManager(note)
             } else {
-                textViews.find {
+                val found = textViews.find {
                     (it.tag as Note).id == note.id
-                }?.let {
+                }
+
+                if (found == null) {
+                    //  remove all of oldview
+                    for (textView in textViews) {
+                        mWindowManager.removeView(textView)
+                    }
+
+                    addTextViewToWindowManager(note)
+                } else {
                     mWindowManager.updateViewLayout(
-                        defaultTextView.decorateTextView(it, note),
+                        defaultTextView.decorateTextView(found, note),
                         mLayoutParams
                     )
                 }
             }
         }
+    }
+
+    private fun addTextViewToWindowManager(note: Note) {
+        val textView = defaultTextView.generateTextView(note)
+        mWindowManager.addView(textView, mLayoutParams)
+        textViews.add(textView)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }
