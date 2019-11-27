@@ -8,6 +8,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.network.SocketDBRepository
+import com.aw.ontopnote.network.SocketManager
+import com.aw.ontopnote.util.SharedPref
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
@@ -18,25 +21,27 @@ class MainActivity : BaseActivity() {
         const val TAG = "MainActivity"
     }
 
-    private lateinit var firstNote: Note
-    private lateinit var firstNoteLive: LiveData<Note>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         launch (Default) {
-            firstNote = NoteRepository.getOrCreateFirstNote(applicationContext)
-            firstNoteLive = NoteRepository.getLiveDataNoteById(applicationContext, firstNote.id)
-            if (NoteRepository.getNoteCount(this@MainActivity) <= 1) {   
-                launch (Dispatchers.Main) {
-                    firstNoteLive.observe(this@MainActivity, Observer<Note> {
-                        Log.v(TAG, "First note is changed, value: ${it.text}")
-                    })
+            if (SharedPref.token != null) {
+                SocketManager.connect()
+                val note = SocketDBRepository.getLastEditedNote()
+                if (note != null) {
+                    goToNoteDetail(note.id)
+                    finishAffinity()
+                    return@launch
                 }
-                goToNoteDetail(null)
-                finishAffinity()
             }
+
+            var lastEditedNote = NoteRepository.getLastEditedNote(applicationContext)
+            if (lastEditedNote == null) {
+                lastEditedNote = NoteRepository.getOrCreateFirstNote(applicationContext)
+            }
+            goToNoteDetail(lastEditedNote.id)
+            finishAffinity()
         }
 
         /** Temporarily hide feature to change custom note's padding size
@@ -49,9 +54,9 @@ class MainActivity : BaseActivity() {
         **/
     }
 
-    fun goToNoteDetail(v: View?) {
+    fun goToNoteDetail(noteId: String) {
         val intent = Intent(this, NoteDetailActivity::class.java)
-        intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, firstNote.id)
+        intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, noteId)
         startActivity(intent)
     }
 }

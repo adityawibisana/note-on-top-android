@@ -8,12 +8,12 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.CompoundButton
+import android.util.Log
 import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.aw.ontopnote.helper.Utils 
 import com.aw.ontopnote.model.ViewType
 import com.aw.ontopnote.viewmodel.NoteDetailViewModel
 import kotlinx.android.synthetic.main.activity_note_detail.*
@@ -33,11 +33,16 @@ class NoteDetailActivity : BaseActivity() {
         ViewModelProviders.of(this@NoteDetailActivity)[NoteDetailViewModel::class.java]
     }
 
+    var pauseTextWatcher = false
+
     private val textWatcher: TextWatcher by lazy {
         object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                model.updateNote(text = s.toString())
-                model.uploadNote()
+//                Log.v(TAG, "Note changed to:${s.toString()}")
+                if (!pauseTextWatcher) {
+                    model.updateNote(text = s.toString())
+                    model.uploadNote()
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -81,6 +86,13 @@ class NoteDetailActivity : BaseActivity() {
 
         val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
         model.initialize(noteId)
+        model.liveNote.observe(this, Observer {
+            Log.v(TAG, "Live note is updated")
+            pauseTextWatcher = true
+            et_note.setText(it.text)
+            pauseTextWatcher = false
+
+        })
     }
 
     override fun onResume() {

@@ -30,7 +30,7 @@ interface NoteDao {
     fun getFirstNote(): Note
 
     @Query("SELECT * FROM notes ORDER BY updatedAt DESC LIMIT 1")
-    fun getLastEditedNote(): Note
+    fun getLastEditedNote(): Note?
 
     @Update
     fun update(note: Note)

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import com.aw.ontopnote.network.ErrorHandler
 import com.aw.ontopnote.network.Service
+import com.aw.ontopnote.network.SocketDBRepository
 import com.aw.ontopnote.network.SocketManager
 import com.aw.ontopnote.util.SharedPref
 import kotlinx.android.synthetic.main.activity_login.*
@@ -66,8 +67,13 @@ class LoginActivity : BaseActivity() {
                         SharedPref.email = userReq.body()!!.email
                         SharedPref.token = userReq.body()!!.token
 
-                        goToNoteActivity()
                         SocketManager.connect()
+                        val note = SocketDBRepository.getLastEditedNote()
+                        if (note == null) {
+                            goToNoteActivity()
+                        } else {
+                            goToNoteDetailActivity(note.id)
+                        }
                     } else {
                         val errorResponse = ErrorHandler.parse(userReq.errorBody())
                         showDefaultErrorToast(errorResponse!!.message)
@@ -88,6 +94,15 @@ class LoginActivity : BaseActivity() {
     private fun goToNoteActivity() {
         launch (Main) {
             val intent = Intent(this@LoginActivity, MainActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
+        }
+    }
+
+    fun goToNoteDetailActivity(noteId: String) {
+        launch (Main) {
+            val intent = Intent(this@LoginActivity, NoteDetailActivity::class.java)
+            intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, noteId)
             startActivity(intent)
             finishAffinity()
         }

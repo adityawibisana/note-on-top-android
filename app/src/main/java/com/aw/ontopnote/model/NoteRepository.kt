@@ -51,7 +51,7 @@ object NoteRepository {
         return NotesDatabase.getInstance(context).noteDao().count()
     }
 
-    fun getLastEditedNote(context: Context) : Note {
+    fun getLastEditedNote(context: Context) : Note? {
         return NotesDatabase.getInstance(context).noteDao().getLastEditedNote()
     }
 
