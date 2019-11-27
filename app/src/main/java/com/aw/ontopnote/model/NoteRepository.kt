@@ -55,6 +55,10 @@ object NoteRepository {
         return NotesDatabase.getInstance(context).noteDao().getLastEditedNote()
     }
 
+    fun getLastEditedNoteLive(context: Context) : LiveData<Note>? {
+        return NotesDatabase.getInstance(context).noteDao().getLastEditedNoteLive()
+    }
+
     fun deleteNote(context: Context, note: Note) {
         return NotesDatabase.getInstance(context).noteDao().delete(note)
     }
