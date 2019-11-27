@@ -58,4 +58,19 @@ object SocketDataSource {
             socket.emit("get", it)
         }
     }
+
+    suspend fun getLastEditedNote (socket: Socket) : Note? = suspendCoroutine { continuation ->
+        JSONObject().also {
+            it.put("url", "$socketURL/note/lastEdited?$query_version&$query_token")
+            socket.once("NOTE_RETRIEVED") { res->
+                try {
+                    val parsedNote = Gson().fromJson(res[0].toString(), Note::class.java)
+                    continuation.resume(parsedNote)
+                } catch (ignored: Exception) {
+                    continuation.resume(null)
+                }
+            }
+            socket.emit("get", it)
+        }
+    }
 }
