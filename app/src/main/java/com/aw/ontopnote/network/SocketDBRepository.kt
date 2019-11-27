@@ -1,10 +1,14 @@
 package com.aw.ontopnote.network
 
+import android.util.Log
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.lang.Exception
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -21,5 +25,13 @@ object SocketDBRepository {
             NoteRepository.updateNote(MainApp.applicationContext(), note)
             continuation.resume(note)
         }
+    }
+
+    fun handleUpdatedNote(res: Array<Any>) {
+        try {
+            val json = JSONObject(res[0].toString())
+            val parsedNote = Gson().fromJson(json.getString("message"), Note::class.java) ?: return
+            NoteRepository.updateNote(MainApp.applicationContext(), parsedNote)
+        } catch (ignored: Exception) { }
     }
 }

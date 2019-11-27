@@ -19,6 +19,8 @@ object SocketManager  {
     const val TIMEOUT = 7000L
     var isConnected = false
 
+    const val EVENT_NOTE_UPDATED = "NOTE_UPDATED"
+
     val socket: Socket by lazy {
         val opts = IO.Options()
         opts.transports = arrayOf(WebSocket.NAME)
@@ -48,11 +50,13 @@ object SocketManager  {
                     }
                     Log.v(TAG, "json:$json")
                 } catch (ignored: Exception) { }
+            }.on(EVENT_NOTE_UPDATED) {
+                SocketDBRepository.handleUpdatedNote(it)
             }
         }
     }
 
-    private val query_token: String by lazy {
+    val query_token: String by lazy {
         "token=" + SharedPref.token
     }
 

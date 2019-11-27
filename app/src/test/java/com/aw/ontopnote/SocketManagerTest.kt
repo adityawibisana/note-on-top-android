@@ -3,15 +3,17 @@ package com.aw.ontopnote
 import androidx.test.runner.AndroidJUnit4
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
-import com.aw.ontopnote.network.SocketDBRepository
-import com.aw.ontopnote.network.SocketManager
-import com.aw.ontopnote.network.SocketDataSource
+import com.aw.ontopnote.network.*
 import com.aw.ontopnote.util.SharedPref
+import io.socket.client.IO
+import io.socket.client.Socket
+import io.socket.engineio.client.transports.WebSocket
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
@@ -70,6 +72,49 @@ class SocketManagerTest {
             }
 
             Thread.sleep(15000)
+        }
+    }
+
+    @Test
+    fun shouldProcessUpdatedNote() {
+        runBlocking {
+            launch (Default) {
+                SharedPref.token = "OaJui1dBGU"
+
+                val isConnected = SocketManager.connect()
+                assertEquals(true, isConnected)
+
+                //should use another socket to connect, then we can get this NOTE_UPDATED
+                val socket2 = IO.socket("$socketURL?$query_version&token=${SharedPref.token}", IO.Options().also { it.transports = arrayOf(WebSocket.NAME) })
+                socket2.once(Socket.EVENT_CONNECT) { _->
+                    JSONObject().also {
+                        it.put("url", "$socketURL/join?$query_version&${SocketManager.query_token}")
+                        socket2.emit("put", it)
+                    }
+                }
+                socket2.connect()
+                Thread.sleep(2000)
+
+                val createdNote = NoteRepository.insertNote(MainApp.applicationContext(), Note(text="test"))
+                val parsedNoteFromServer = SocketDataSource.createNote(createdNote, socket2)
+                assertNotNull(parsedNoteFromServer)
+                NoteRepository.updateNote(MainApp.applicationContext(), createdNote)
+                //ensure the DB is writing the remote id
+                val createdNoteOnDB = NoteRepository.getNoteById(MainApp.applicationContext(), createdNote.id)
+                assertEquals(createdNote.remoteId, createdNoteOnDB.remoteId)
+
+                val updatedText = UUID.randomUUID().toString()
+                createdNote.text = updatedText
+                SocketDataSource.updateNote(createdNote, socket2)
+                Thread.sleep(2000)
+
+                // local note should already be updated
+                val localNote = NoteRepository.getNoteById(MainApp.applicationContext(), createdNote.id)
+                assertEquals(updatedText, localNote.text)
+                println("local note has been updated by another socket")
+                Thread.sleep(2000)
+            }
+
         }
     }
 }

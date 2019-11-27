@@ -9,11 +9,12 @@ import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.R
 import com.aw.ontopnote.helper.Themes
 import com.aw.ontopnote.model.ViewType.Companion.VISIBLE
+import com.google.gson.annotations.SerializedName
 import java.util.*
 
 @Entity(tableName = "notes")
 data class Note (
-    @PrimaryKey @ColumnInfo @NonNull
+    @PrimaryKey @ColumnInfo @NonNull @SerializedName("localId")
     val id:String = UUID.randomUUID().toString(),
 
     @ColumnInfo
@@ -31,7 +32,7 @@ data class Note (
     @ColumnInfo
     var updatedAt: Int = -1,
 
-    @ColumnInfo
+    @ColumnInfo @SerializedName("id")
     var remoteId: String = ""
 )
 
