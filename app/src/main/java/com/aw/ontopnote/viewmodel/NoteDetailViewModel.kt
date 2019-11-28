@@ -21,13 +21,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import kotlin.coroutines.CoroutineContext
 
-class NoteDetailViewModel : ViewModel(), CoroutineScope {
-    private val job: Job by lazy { Job() }
-
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
-
-
+class NoteDetailViewModel : BaseViewModel() {
     lateinit var note: Note
 
     var noteId: String = ""
