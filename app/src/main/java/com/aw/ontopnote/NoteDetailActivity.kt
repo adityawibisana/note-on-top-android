@@ -33,13 +33,13 @@ class NoteDetailActivity : BaseActivity() {
         ViewModelProviders.of(this@NoteDetailActivity)[NoteDetailViewModel::class.java]
     }
 
-    var pauseTextWatcher = false
+    var pauseWatcher = false
 
     private val textWatcher: TextWatcher by lazy {
         object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 //                Log.v(TAG, "Note changed to:${s.toString()}")
-                if (!pauseTextWatcher) {
+                if (!pauseWatcher) {
                     model.updateNote(text = s.toString())
                     model.uploadNote()
                 }
@@ -53,8 +53,10 @@ class NoteDetailActivity : BaseActivity() {
     private val seekBarFontSizeChangeListener: SeekBar.OnSeekBarChangeListener by lazy {
         object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                model.updateNote(fontSize = progress)
-                model.uploadNote()
+                if (!pauseWatcher) {
+                    model.updateNote(fontSize = progress)
+                    model.uploadNote()
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) { }
@@ -64,9 +66,11 @@ class NoteDetailActivity : BaseActivity() {
 
     private val onStickyNoteChangedListener: CompoundButton.OnCheckedChangeListener by lazy {
         CompoundButton.OnCheckedChangeListener { _, isChecked ->
-            val viewType = if (isChecked) ViewType.VISIBLE else ViewType.GONE
-            model.updateNote(viewType = viewType)
-            model.uploadNote()
+            if (!pauseWatcher) {
+                val viewType = if (isChecked) ViewType.VISIBLE else ViewType.GONE
+                model.updateNote(viewType = viewType)
+                model.uploadNote()
+            }
         }
     }
 
@@ -88,9 +92,13 @@ class NoteDetailActivity : BaseActivity() {
         model.initialize(noteId)
         model.liveNote.observe(this, Observer {
             Log.v(TAG, "Live note is updated")
-            pauseTextWatcher = true
+            pauseWatcher = true
+
             et_note.setText(it.text)
-            pauseTextWatcher = false
+            sb_font_size.progress = it.fontSize
+            tb_always_show.isChecked = it.viewType != ViewType.GONE
+
+            pauseWatcher = false
 
         })
     }
