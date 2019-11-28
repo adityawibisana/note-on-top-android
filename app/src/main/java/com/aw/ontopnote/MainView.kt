@@ -4,17 +4,15 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.DrawableCompat
-import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.event.UpdateNoteEvent
 import kotlinx.android.synthetic.main.view_main.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import timber.log.Timber
 
 
 class MainView(context: Context) : RelativeLayout(context) {
@@ -23,10 +21,6 @@ class MainView(context: Context) : RelativeLayout(context) {
     private var isExpanded = true
     private var lastClickTimeStamp = 0.toLong()
 
-    companion object {
-        const val TAG = "MainView"
-    }
-
     init {
         (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_main, this)
 
@@ -34,14 +28,14 @@ class MainView(context: Context) : RelativeLayout(context) {
             switchTextPosition()
 
             if (isDoubleClick(System.currentTimeMillis() ,lastClickTimeStamp)) {
-                Log.v(TAG, "Double Clicked")
+                Timber.v("Double Clicked")
 
                 val mainActivityIntent = Intent(context, MainActivity::class.java)
                 mainActivityIntent.addCategory(Intent.CATEGORY_HOME)
                 mainActivityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 context.startActivity(mainActivityIntent)
             } else {
-                Log.v(TAG, "Clicked")
+                Timber.v("Clicked")
             }
             lastClickTimeStamp = System.currentTimeMillis()
         }

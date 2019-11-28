@@ -4,8 +4,6 @@ import CommonUtils.defaultScope
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.util.Log
 import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -19,12 +17,12 @@ import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
 import com.aw.ontopnote.helper.Constants
 import com.aw.ontopnote.helper.SingletonHolder
-import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.ViewType
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class DefaultTextView private constructor(context: Context) {
 
@@ -37,7 +35,7 @@ class DefaultTextView private constructor(context: Context) {
     }
 
     companion object : SingletonHolder<DefaultTextView, Context>(::DefaultTextView) {
-        const val TAG = "DefaultTextView"
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -51,8 +49,6 @@ class DefaultTextView private constructor(context: Context) {
             override fun onSingleTapUp(e: MotionEvent?): Boolean { return false }
 
             override fun onDown(e: MotionEvent?): Boolean {
-                Log.v(TAG, "note OnDown")
-
                 //ensure we get the latest note pointer
                 defaultScope.launch (Default) {
                     val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
@@ -101,7 +97,7 @@ class DefaultTextView private constructor(context: Context) {
     }
 
     fun decorateTextView (textView: TextView, note: Note) : TextView {
-        Log.v(TAG, "note.viewType:${note.viewType}")
+        Timber.v("note.viewType:${note.viewType}")
 
         when (note.viewType) {
             ViewType.GONE -> textView.visibility = View.GONE
@@ -133,7 +129,7 @@ class DefaultTextView private constructor(context: Context) {
         if (paddingSize < Constants.MINIMUM_NOTE_PADDING_SIZE) {
             paddingSize = Constants.MINIMUM_NOTE_PADDING_SIZE
         }
-        Log.v(TAG, "paddingSize:$paddingSize")
+        Timber.v("paddingSize:$paddingSize")
 
         textView.setPadding(0, paddingSize, paddingSize, paddingSize)
 

@@ -8,7 +8,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.CompoundButton
-import android.util.Log
 import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
@@ -21,12 +20,12 @@ import kotlinx.android.synthetic.main.dialog_color.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class NoteDetailActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_NOTE_ID = "extraNoteId"
-        const val TAG = "NoteDetailActivity"
     }
 
     private val model: NoteDetailViewModel by lazy {
@@ -91,7 +90,7 @@ class NoteDetailActivity : BaseActivity() {
         val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
         model.initialize(noteId)
         model.liveNote.observe(this, Observer {
-            Log.v(TAG, "Live note is updated")
+            Timber.v( "Live note is updated")
             pauseWatcher = true
 
             et_note.setText(it.text)

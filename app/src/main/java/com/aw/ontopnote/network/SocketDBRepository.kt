@@ -1,6 +1,5 @@
 package com.aw.ontopnote.network
 
-import android.util.Log
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository

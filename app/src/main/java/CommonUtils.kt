@@ -2,14 +2,13 @@ import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 object CommonUtils {
-    private const val TAG = "CommonUtils"
 
     private val handler: Handler by lazy {
         val handlerThread = HandlerThread("DefaultNormalThread", Thread.NORM_PRIORITY)
@@ -50,7 +49,7 @@ object CommonUtils {
                 }
 
                 if (filtered != -1) {
-                    Log.v(TAG, "Using index:$filtered for the thread")
+                    Timber.v("Using index:$filtered for the thread")
                     handlers[filtered].post {
                         handlers[filtered].sendEmptyMessage(WHAT_IS_RUNNING)
                         runnable()
@@ -59,7 +58,7 @@ object CommonUtils {
                     break
                 }
 
-                Log.v(TAG, "All thread is busy. Retrying...")
+                Timber.v("All thread is busy. Retrying...")
 
             } while (filtered == -1)
         }

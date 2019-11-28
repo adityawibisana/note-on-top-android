@@ -1,15 +1,13 @@
 package com.aw.ontopnote.model
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.aw.ontopnote.R
 import com.aw.ontopnote.model.event.UpdateNoteEvent
 import org.greenrobot.eventbus.EventBus
+import timber.log.Timber
 
 object NoteRepository {
-    private const val TAG = "NoteRepository"
-
     fun insertNote(context: Context, note: Note): Note {
         NotesDatabase.getInstance(context).noteDao().insertNote(note)
         return note
@@ -38,7 +36,7 @@ object NoteRepository {
         val noteDao = NotesDatabase.getInstance(context).noteDao()
         noteDao.update(note)
 
-        Log.v(TAG, "updated note with id:" + note.id)
+        Timber.v("updated note with id:${note.id}")
         EventBus.getDefault().post(UpdateNoteEvent(note))
     }
 

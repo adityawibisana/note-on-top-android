@@ -66,10 +66,6 @@ class MainService : Service(), CoroutineScope {
     override fun onCreate() {
         super.onCreate()
 
-        launch (Default) {
-            Fabric.with(this@MainService, Crashlytics())
-        }
-
         mLayoutParams.gravity = Gravity.START or Gravity.TOP
 
         val lastNoteLive = NoteRepository.getLastEditedNoteLive(MainApp.applicationContext())

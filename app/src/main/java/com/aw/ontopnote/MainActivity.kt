@@ -9,10 +9,6 @@ import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
 
-    companion object {
-        const val TAG = "MainActivity"
-    }
-
     private val model: MainActivityViewModel by lazy {
         ViewModelProviders.of(this@MainActivity)[MainActivityViewModel::class.java]
     }

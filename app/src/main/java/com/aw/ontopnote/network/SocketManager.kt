@@ -4,14 +4,12 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.engineio.client.transports.WebSocket
 import org.json.JSONObject
-import android.util.Log
 import com.aw.ontopnote.util.SharedPref
 import kotlinx.coroutines.suspendCancellableCoroutine
+import timber.log.Timber
 import java.lang.Exception
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import kotlin.coroutines.resume 
 
-const val TAG = "SocketManager"
 const val socketURL = "http://192.168.1.101:1337"
 const val query_version = "__sails_io_sdk_version=1.2.1"
 
@@ -34,10 +32,10 @@ object SocketManager  {
                     this.emit("put", it)
                 }
             }.on(Socket.EVENT_ERROR) {
-                Log.v(TAG, "Socket connect error:")
+                Timber.v("Socket connect error:")
                 handleDisconnectEvent()
             }.on(Socket.EVENT_DISCONNECT) {
-                Log.v(TAG, "Socket disconnect")
+                Timber.v("Socket disconnect")
                 handleDisconnectEvent()
             }.on(Socket.EVENT_MESSAGE) {
                 try {
@@ -48,7 +46,7 @@ object SocketManager  {
                             // socket/API call to create note
                         }
                     }
-                    Log.v(TAG, "json:$json")
+                    Timber.v("json:$json")
                 } catch (ignored: Exception) { }
             }.on(EVENT_NOTE_UPDATED) {
                 SocketDBRepository.handleUpdatedNote(it)
