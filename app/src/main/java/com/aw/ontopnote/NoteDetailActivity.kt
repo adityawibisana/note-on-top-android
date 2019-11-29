@@ -98,8 +98,11 @@ class NoteDetailActivity : BaseActivity() {
             tb_always_show.isChecked = it.viewType != ViewType.GONE
 
             pauseWatcher = false
-
         })
+
+        et_note.addTextChangedListener(textWatcher)
+        sb_font_size.setOnSeekBarChangeListener(seekBarFontSizeChangeListener)
+        tb_always_show.setOnCheckedChangeListener(onStickyNoteChangedListener)
     }
 
     override fun onResume() {
@@ -110,18 +113,14 @@ class NoteDetailActivity : BaseActivity() {
                 et_note.setText(note.text)
                 sb_font_size.progress = note.fontSize
                 tb_always_show.isChecked = note.viewType != ViewType.GONE
+                pauseWatcher = false
             }
-            et_note.addTextChangedListener(textWatcher)
-            sb_font_size.setOnSeekBarChangeListener(seekBarFontSizeChangeListener)
-            tb_always_show.setOnCheckedChangeListener(onStickyNoteChangedListener)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        et_note.removeTextChangedListener(textWatcher)
-        sb_font_size.setOnSeekBarChangeListener(null)
-        tb_always_show.setOnCheckedChangeListener(null)
+        pauseWatcher = true
     }
 
     fun showColorDialog(v: View) {
