@@ -1,22 +1,22 @@
 package com.aw.ontopnote
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.aw.ontopnote.network.ErrorHandler
-import com.aw.ontopnote.network.Service
-import com.aw.ontopnote.network.SocketDBRepository
-import com.aw.ontopnote.network.SocketManager
+import androidx.lifecycle.ViewModelProviders
 import com.aw.ontopnote.util.SharedPref
+import com.aw.ontopnote.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class LoginActivity : BaseActivity() {
+
+    private val model: LoginViewModel by lazy {
+        ViewModelProviders.of(this@LoginActivity)[LoginViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,28 +24,16 @@ class LoginActivity : BaseActivity() {
             setContentView(R.layout.activity_login)
         } else {
             goToNoteActivity()
-            launch (Default) {
-                SocketManager.connect()
-            }
+            finishAffinity()
         }
     }
 
     fun onRegisterClicked(view: View) {
         launch (Default) {
-            try {
-                val userReq = Service.onTopNoteService.signUp(et_email.text.toString(), et_password.text.toString()).execute()
-                if (userReq.isSuccessful) {
-                    SharedPref.id = userReq.body()!!.id
-                    SharedPref.email = userReq.body()!!.email
-                } else {
-                    val errorResponse = ErrorHandler.parse(userReq.errorBody())
-                    launch (Main) {
-                        Toast.makeText(this@LoginActivity, errorResponse!!.message, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (exception: Exception) {
-                launch (Main) {
-                    Toast.makeText(this@LoginActivity, String.format(resources.getString(R.string.signup_error), exception.message), Toast.LENGTH_SHORT).show()
+            val errorMessage = model.signUp(et_email.text.toString(), et_password.text.toString())
+            launch (Main) {
+                if (errorMessage != null) {
+                    Toast.makeText(this@LoginActivity, errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -53,34 +41,17 @@ class LoginActivity : BaseActivity() {
 
     fun onLoginClicked(view: View) {
         launch (Default) {
-            if (SharedPref.token == null) {
-                val baseOS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Build.VERSION.BASE_OS else "-"
-                try {
-                    val userReq = Service.onTopNoteService.login(
-                        et_email.text.toString(),
-                        et_password.text.toString(),
-                        "${Build.MANUFACTURER} ${Build.MODEL}",
-                        "$baseOS ${Build.VERSION.SDK_INT}" ).execute()
+            val errorMessage = model.login(et_email.text.toString(), et_password.text.toString())
 
-                    if (userReq.isSuccessful) {
-                        SharedPref.id = userReq.body()!!.id
-                        SharedPref.email = userReq.body()!!.email
-                        SharedPref.token = userReq.body()!!.token
-
-                        SocketManager.connect()
-                        val note = SocketDBRepository.getLastEditedNote()
-                        if (note == null) {
-                            goToNoteActivity()
-                        } else {
-                            goToNoteDetailActivity(note.id)
-                        }
-                    } else {
-                        val errorResponse = ErrorHandler.parse(userReq.errorBody())
-                        showDefaultErrorToast(errorResponse!!.message)
-                    }
-                } catch (exception: Exception) {
-                    showDefaultErrorToast(String.format(resources.getString(R.string.login_error), exception.message))
+            if (errorMessage == null) {
+                val lastEditedNote = model.getLastEditedNote()
+                if (lastEditedNote == null) {
+                    goToNoteActivity()
+                } else {
+                    goToNoteDetailActivity(lastEditedNote.id)
                 }
+            } else {
+                showDefaultErrorToast(errorMessage)
             }
         }
     }
