@@ -5,6 +5,8 @@ import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.NotesDatabase
 import junit.framework.Assert.*
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Test
@@ -35,76 +37,92 @@ class DaoTest {
     @Test
     fun insert() {
         runBlocking {
-            val firstNote = NoteRepository.getOrCreateFirstNote(context)
-            assertNotNull(firstNote)
+            launch (Default) {
+                val firstNote = NoteRepository.getOrCreateFirstNote(context)
+                assertNotNull(firstNote)
 
-            val firstNoteDB = NoteRepository.getNoteById(context, firstNote.id)
+                val firstNoteDB = NoteRepository.getNoteById(context, firstNote.id)
 
-            assertEquals(firstNote.id, firstNoteDB.id)
-            assertEquals(firstNote.text, firstNoteDB.text)
-            assertEquals(firstNote.color, firstNoteDB.color)
-            assertEquals(firstNote.viewType, firstNoteDB.viewType)
-            assertEquals(firstNote.fontSize, firstNoteDB.fontSize)
+                assertEquals(firstNote.id, firstNoteDB.id)
+                assertEquals(firstNote.text, firstNoteDB.text)
+                assertEquals(firstNote.color, firstNoteDB.color)
+                assertEquals(firstNote.viewType, firstNoteDB.viewType)
+                assertEquals(firstNote.fontSize, firstNoteDB.fontSize)
 
-            println("Executed through here")
+                println("insert() test done")
+            }
         }
     }
 
     @Test
     fun update() {
         runBlocking {
-            val updatedText = "Note is Updated"
-            val note = NoteRepository.getOrCreateFirstNote(context)
-            note.text = updatedText
-            NoteRepository.updateNote(context, note)
+            launch (Default) {
+                val updatedText = "Note is Updated"
+                val note = NoteRepository.getOrCreateFirstNote(context)
+                note.text = updatedText
+                NoteRepository.updateNote(context, note)
 
-            val noteDB = NoteRepository.getNoteById(context, note.id)
-            assertEquals(updatedText, noteDB.text)
+                val noteDB = NoteRepository.getNoteById(context, note.id)
+                assertEquals(updatedText, noteDB.text)
 
-            println("Executed through here")
+                println("update() test done")
+            }
         }
     }
 
     @Test
     fun delete() {
         runBlocking {
-            val createdNoteId = NoteRepository.insertNote(context, Note(text = "")).id
-            val note = NoteRepository.getNoteById(context, createdNoteId)
+            launch (Default) {
+                val createdNoteId = NoteRepository.insertNote(context, Note(text = "")).id
+                val note = NoteRepository.getNoteById(context, createdNoteId)
 
-            assertNotNull(note)
-            assertEquals(createdNoteId, note.id)
+                assertNotNull(note)
+                assertEquals(createdNoteId, note.id)
 
-            NoteRepository.deleteNote(context, note)
+                NoteRepository.deleteNote(context, note)
 
-            val deletedNote = NoteRepository.getNoteById(context, createdNoteId)
-            assertNull(deletedNote)
+                val deletedNote = NoteRepository.getNoteById(context, createdNoteId)
+                assertNull(deletedNote)
+
+                println("delete() test done")
+            }
         }
     }
 
     @Test
     fun deleteAllNotes() {
         runBlocking {
-            val note1Id = NoteRepository.insertNote(context, Note(text = "")).id
-            assertEquals(note1Id, NoteRepository.getNoteById(context, note1Id).id)
+            launch (Default) {
+                val note1Id = NoteRepository.insertNote(context, Note(text = "")).id
+                assertEquals(note1Id, NoteRepository.getNoteById(context, note1Id).id)
 
-            val note2Id = NoteRepository.insertNote(context, Note(text = "")).id
-            assertEquals(note2Id, NoteRepository.getNoteById(context, note2Id).id)
+                val note2Id = NoteRepository.insertNote(context, Note(text = "")).id
+                assertEquals(note2Id, NoteRepository.getNoteById(context, note2Id).id)
 
-            NoteRepository.deleteAllNotes(context)
-            assertEquals(0, NoteRepository.getAllNotes(context).size)
+                NoteRepository.deleteAllNotes(context)
+                assertEquals(0, NoteRepository.getAllNotes(context).size)
+
+                println("deleteAllNotes() test done")
+            }
         }
     }
 
     @Test
     fun getAllNotes() {
         runBlocking {
-            NoteRepository.deleteAllNotes(context)
-            NoteRepository.insertNote(context, Note(text = ""))
-            NoteRepository.insertNote(context, Note(text = ""))
-            NoteRepository.insertNote(context, Note(text = ""))
+            launch (Default) {
+                NoteRepository.deleteAllNotes(context)
+                NoteRepository.insertNote(context, Note(text = ""))
+                NoteRepository.insertNote(context, Note(text = ""))
+                NoteRepository.insertNote(context, Note(text = ""))
 
-            val allNotes = NoteRepository.getAllNotes(context)
-            assertEquals(3, allNotes.size)
+                val allNotes = NoteRepository.getAllNotes(context)
+                assertEquals(3, allNotes.size)
+
+                println("getAllNotes() test done")
+            }
         }
     }
 }
