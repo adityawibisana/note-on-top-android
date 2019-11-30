@@ -4,6 +4,7 @@ import CommonUtils.defaultScope
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -17,12 +18,14 @@ import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
 import com.aw.ontopnote.helper.Constants
 import com.aw.ontopnote.helper.SingletonHolder
+import com.aw.ontopnote.helper.Themes
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.ViewType
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.lang.Exception
 
 class DefaultTextView private constructor(context: Context) {
 
@@ -118,9 +121,13 @@ class DefaultTextView private constructor(context: Context) {
             }
         }
 
+        var color  = Color.parseColor(Themes.defaultBackground)
+        try {
+            color = Color.parseColor(note.color)
+        } catch (ignored: Exception) { }
         DrawableCompat.setTint(
             textView.background,
-            note.color
+            color
         )
 
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, note.fontSize.toFloat())

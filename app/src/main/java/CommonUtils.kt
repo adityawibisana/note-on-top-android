@@ -75,4 +75,6 @@ object CommonUtils {
         return context.resources.getDimension(resource)
     }
 
+    fun intToColorHex(color: Int) = String.format("#%06X", 0xFFFFFF and color)
+
 }

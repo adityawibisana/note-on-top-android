@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.DrawableCompat
@@ -47,10 +48,9 @@ class MainView(context: Context) : RelativeLayout(context) {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: UpdateNoteEvent) {
         text_to_show.text = event.note.text
-
         DrawableCompat.setTint(
             text_to_show.background,
-            event.note.color
+            Color.parseColor(event.note.color)
         )
 
         if (!isExpanded) {

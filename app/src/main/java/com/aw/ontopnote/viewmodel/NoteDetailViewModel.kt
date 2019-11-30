@@ -51,7 +51,7 @@ class NoteDetailViewModel : BaseViewModel() {
         }
     }
 
-    fun updateNote(fontSize: Int? = null, viewType: Int? = null, color: Int? = null, text: String? = null) {
+    fun updateNote(fontSize: Int? = null, viewType: Int? = null, color: String? = null, text: String? = null) {
         launch (Default) {
             if (::note.isInitialized) {
                 if (fontSize != null) {

@@ -21,7 +21,7 @@ data class Note (
     var text: String,
 
     @ColumnInfo
-    var color: Int = Themes.defaultBackground,
+    var color: String = Themes.defaultBackground,
 
     @ColumnInfo
     var viewType: Int = VISIBLE,
