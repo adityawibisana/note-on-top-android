@@ -40,4 +40,7 @@ interface NoteDao {
 
     @Delete
     fun delete(note: Note)
+
+    @Query("SELECT * FROM notes WHERE remoteId = :remoteId")
+    fun getNoteByRemoteId(remoteId: String): Note
 }

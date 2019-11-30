@@ -47,7 +47,7 @@ object SocketDBRepository {
             }
             //ensure it's on DB first
             @Suppress("SENSELESS_COMPARISON")
-            if (NoteRepository.getNoteById(MainApp.applicationContext(), note.id) == null) {
+            if (NoteRepository.getNoteByRemoteId(MainApp.applicationContext(), note.remoteId) == null) {
                 NoteRepository.insertNote(MainApp.applicationContext(), note)
             }
             NoteRepository.updateNote(MainApp.applicationContext(), note)

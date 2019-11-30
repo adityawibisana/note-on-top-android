@@ -15,7 +15,7 @@ import java.util.*
 @Entity(tableName = "notes")
 data class Note (
     @PrimaryKey @ColumnInfo @NonNull @SerializedName("localId")
-    val id:String = UUID.randomUUID().toString(),
+    var id:String = UUID.randomUUID().toString(),
 
     @ColumnInfo
     var text: String,

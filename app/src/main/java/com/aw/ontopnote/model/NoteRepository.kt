@@ -6,9 +6,13 @@ import com.aw.ontopnote.R
 import com.aw.ontopnote.model.event.UpdateNoteEvent
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
+import java.util.*
 
 object NoteRepository {
     fun insertNote(context: Context, note: Note): Note {
+        if (note.id == "") {
+            note.id = UUID.randomUUID().toString()
+        }
         NotesDatabase.getInstance(context).noteDao().insertNote(note)
         return note
     }
@@ -63,5 +67,10 @@ object NoteRepository {
 
     fun deleteAllNotes(context: Context) {
         NotesDatabase.getInstance(context).noteDao().deleteAllNotes()
+    }
+
+    fun getNoteByRemoteId(context: Context, remoteId: String) : Note {
+        val noteDao = NotesDatabase.getInstance(context).noteDao()
+        return noteDao.getNoteById(remoteId)
     }
 }
