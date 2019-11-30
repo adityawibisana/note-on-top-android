@@ -5,6 +5,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -125,10 +128,15 @@ class DefaultTextView private constructor(context: Context) {
         try {
             color = Color.parseColor(note.color)
         } catch (ignored: Exception) { }
-        DrawableCompat.setTint(
-            textView.background,
-            color
-        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            DrawableCompat.setTint(
+                textView.background,
+                color
+            )
+        } else {
+            (textView.background as Drawable).mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN)
+        }
 
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, note.fontSize.toFloat())
 
