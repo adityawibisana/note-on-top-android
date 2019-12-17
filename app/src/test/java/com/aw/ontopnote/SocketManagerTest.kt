@@ -27,7 +27,6 @@ class SocketManagerTest {
             SharedPref.token = "OaJui1dBGU"
 
             SocketManager.connect()
-            Thread.sleep(2000)
 
             launch (Default) {
                 val note = SocketDBRepository.createNote( Note(text="test"))
@@ -38,7 +37,6 @@ class SocketManagerTest {
                 assertEquals(noteDB.remoteId, note.remoteId)
                 println("id and remoteId on localDB is now the same with the one from socket")
             }
-            Thread.sleep(2000)
         }
     }
 
