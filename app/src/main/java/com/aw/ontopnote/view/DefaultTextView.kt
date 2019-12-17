@@ -40,13 +40,11 @@ class DefaultTextView private constructor(context: Context) {
 
     }
 
-    companion object : SingletonHolder<DefaultTextView, Context>(::DefaultTextView) {
-
-    }
+    companion object : SingletonHolder<DefaultTextView, Context>(::DefaultTextView)
 
     @SuppressLint("ClickableViewAccessibility")
     fun generateTextView(note: Note): TextView {
-        val textView = inflater.inflate(com.aw.ontopnote.R.layout.view_default_text_view, null) as TextView
+        val textView = inflater.inflate(R.layout.view_default_text_view, null) as TextView
         textView.tag = note
 
         val doubleTapListener = object : GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
@@ -93,11 +91,11 @@ class DefaultTextView private constructor(context: Context) {
 
         val gestureDetector = GestureDetector(textView.context, doubleTapListener)
 
-        textView.setOnTouchListener(View.OnTouchListener { v, event ->
+        textView.setOnTouchListener { _, event ->
             // TODO Auto-generated method stub
             gestureDetector.onTouchEvent(event)
             false
-        })
+        }
 
         return decorateTextView(textView, note)
     }
