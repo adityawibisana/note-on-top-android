@@ -52,11 +52,11 @@ class DefaultTextView private constructor(context: Context) {
 
             override fun onDown(e: MotionEvent?): Boolean = false
 
-            override fun onSingleTapUp(e: MotionEvent?): Boolean { return false }
+            override fun onSingleTapUp(e: MotionEvent?): Boolean = false
 
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean { return false }
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean = false
 
-            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean { return false }
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean = false
 
             override fun onLongPress(e: MotionEvent?) {
                 val intent = Intent(textView.context, NoteDetailActivity::class.java)
@@ -68,9 +68,9 @@ class DefaultTextView private constructor(context: Context) {
                 Toast.makeText(textView.context, R.string.pending_wait_note_detail, Toast.LENGTH_LONG).show()
             }
 
-            override fun onDoubleTap(e: MotionEvent?): Boolean { return false }
-            override fun onDoubleTapEvent(e: MotionEvent?): Boolean { return false }
-            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean { return false }
+            override fun onDoubleTap(e: MotionEvent?): Boolean = false
+            override fun onDoubleTapEvent(e: MotionEvent?): Boolean = false
+            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean = false
         }
 
         val gestureDetector = GestureDetector(textView.context, doubleTapListener)
