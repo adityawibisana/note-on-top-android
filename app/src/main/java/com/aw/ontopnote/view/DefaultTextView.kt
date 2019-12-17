@@ -50,18 +50,9 @@ class DefaultTextView private constructor(context: Context) {
         val doubleTapListener = object : GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
             override fun onShowPress(e: MotionEvent?) { }
 
+            override fun onDown(e: MotionEvent?): Boolean = false
+
             override fun onSingleTapUp(e: MotionEvent?): Boolean { return false }
-
-            override fun onDown(e: MotionEvent?): Boolean {
-                //ensure we get the latest note pointer
-                defaultScope.launch (Default) {
-                    val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
-
-                    latestNote.viewType = if (latestNote.viewType == ViewType.PARTIALLY_HIDDEN) ViewType.VISIBLE else ViewType.PARTIALLY_HIDDEN
-                    NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
-                }
-                return true
-            }
 
             override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean { return false }
 
@@ -72,13 +63,6 @@ class DefaultTextView private constructor(context: Context) {
                 intent.addCategory(Intent.CATEGORY_HOME)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, note.id)
-
-                //ensure we get the latest note pointer
-                defaultScope.launch (Default) {
-                    val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
-                    latestNote.viewType = ViewType.VISIBLE
-                    NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
-                }
 
                 textView.context.startActivity(intent)
                 Toast.makeText(textView.context, R.string.pending_wait_note_detail, Toast.LENGTH_LONG).show()
