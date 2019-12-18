@@ -50,7 +50,17 @@ class DefaultTextView private constructor(context: Context) {
         val doubleTapListener = object : GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
             override fun onShowPress(e: MotionEvent?) { }
 
-            override fun onDown(e: MotionEvent?): Boolean = false
+            override fun onDown(e: MotionEvent?): Boolean {
+                //ensure we get the latest note pointer
+                defaultScope.launch (Default) {
+                    val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
+
+                    latestNote.viewType = if (latestNote.viewType == ViewType.PARTIALLY_HIDDEN) ViewType.VISIBLE else ViewType.PARTIALLY_HIDDEN
+                    NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
+                }
+                return true
+            }
+
 
             override fun onSingleTapUp(e: MotionEvent?): Boolean = false
 
