@@ -3,6 +3,7 @@ package com.aw.ontopnote
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,12 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        supportActionBar?.hide()
+    }
 
     override fun onResume() {
         super.onResume()
