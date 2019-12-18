@@ -1,6 +1,7 @@
 package com.aw.ontopnote
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -21,6 +22,8 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.GradientDrawable 
 
 class NoteDetailActivity : BaseActivity() {
 
@@ -96,6 +99,7 @@ class NoteDetailActivity : BaseActivity() {
             et_note.setText(it.text)
             sb_font_size.progress = it.fontSize
             tb_always_show.isChecked = it.viewType != ViewType.GONE
+            updateButtonBackground(Color.parseColor(it.color))
 
             pauseWatcher = false
         })
@@ -113,6 +117,7 @@ class NoteDetailActivity : BaseActivity() {
                 et_note.setText(note.text)
                 sb_font_size.progress = note.fontSize
                 tb_always_show.isChecked = note.viewType != ViewType.GONE
+                updateButtonBackground(Color.parseColor(note.color))
                 pauseWatcher = false
             }
         }
@@ -132,6 +137,7 @@ class NoteDetailActivity : BaseActivity() {
             if (b is Button) b.setOnClickListener {
                 model.updateNote(color = CommonUtils.intToColorHex((it.background as ColorDrawable).color))
                 model.uploadNote()
+                updateButtonBackground((it.background as ColorDrawable).color)
             }
         }
     }
@@ -139,5 +145,16 @@ class NoteDetailActivity : BaseActivity() {
     fun onRegisterLoginClicked(view: View) {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+    }
+
+    fun updateButtonBackground(color: Int) {
+        val background = bt_switch_color.background
+        if (background is ShapeDrawable) {
+            background.paint.color = color
+        } else if (background is GradientDrawable) {
+            background.setColor(color)
+        } else if (background is ColorDrawable) {
+            background.color = color
+        }
     }
 }
