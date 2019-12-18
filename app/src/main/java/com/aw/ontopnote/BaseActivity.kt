@@ -7,6 +7,8 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.aw.ontopnote.helper.Utils
+import com.aw.ontopnote.util.SharedPref
+import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
@@ -31,7 +33,13 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope {
     override fun onResume() {
         super.onResume()
         isPaused = false
-        showPermissionOrProceedToApp()
+
+        if (SharedPref.isFirstTimeOpenApp) {
+            SharedPref.isFirstTimeOpenApp = false
+            showPermissionOrProceedToApp()
+        } else {
+            startService(Intent(applicationContext, MainService::class.java))
+        }
     }
 
     override fun onPause() {
@@ -42,7 +50,11 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE) {
-            showPermissionOrProceedToApp()
+            if (!Utils.canDrawOverlays(this)) {
+                ProcessPhoenix.triggerRebirth(applicationContext, Intent(applicationContext, MainActivity::class.java))
+            } else {
+                startService(Intent(applicationContext, MainService::class.java))
+            }
         }
     }
 
