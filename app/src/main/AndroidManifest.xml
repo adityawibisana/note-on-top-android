@@ -27,10 +27,6 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-                android:name="io.fabric.ApiKey"
-                android:value="2cb12d89a019206fdd96cd4bcc996b113beb419e" />
-
         <service
                 android:name=".MainService"
                 android:enabled="true"
