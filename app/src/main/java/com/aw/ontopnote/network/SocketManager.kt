@@ -63,10 +63,13 @@ object SocketManager  {
             socket.once(Socket.EVENT_CONNECT) {
                 continuation.resume(true)
             }
+            socket.once(Socket.EVENT_ERROR) {
+                continuation.resume(false)
+            }
+            socket.once(Socket.EVENT_CONNECT_ERROR) {
+                continuation.resume(false)
+            }
             socket.connect()
-            CommonUtils.runOnDefaultThread({
-                if (continuation.isActive) continuation.resume(isConnected)
-            }, TIMEOUT)
         } else {
             continuation.resume(false)
         }
