@@ -91,7 +91,7 @@ class NoteDetailActivity : BaseActivity() {
         setContentView(R.layout.activity_note_detail)
 
         val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
-        model.initialize(noteId)
+        model.initialize(noteId!!)
         model.liveNote.observe(this, Observer {
             Timber.v( "Live note is updated")
             pauseWatcher = true
