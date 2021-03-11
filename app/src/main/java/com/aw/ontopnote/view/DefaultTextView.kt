@@ -15,7 +15,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.drawable.DrawableCompat
-import com.aw.commons.ScopeUtil
+import com.aw.commons.ScopeUtils
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
@@ -51,7 +51,7 @@ class DefaultTextView private constructor(context: Context) {
 
             override fun onDown(e: MotionEvent?): Boolean {
                 //ensure we get the latest note pointer
-                ScopeUtil.db.launch {
+                ScopeUtils.db.launch {
                     val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
 
                     latestNote.viewType = if (latestNote.viewType == ViewType.PARTIALLY_HIDDEN) ViewType.VISIBLE else ViewType.PARTIALLY_HIDDEN

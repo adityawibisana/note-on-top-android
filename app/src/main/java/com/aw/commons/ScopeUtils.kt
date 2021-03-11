@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-object ScopeUtil {
+object ScopeUtils {
     val ui = object: CoroutineScope {
         override val coroutineContext: CoroutineContext
             get() = Job() + Dispatchers.Main
