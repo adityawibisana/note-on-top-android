@@ -20,7 +20,7 @@ import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
 import com.aw.ontopnote.helper.Constants
-import com.aw.ontopnote.helper.SingletonHolder
+import com.aw.commons.SingletonHolder
 import com.aw.ontopnote.helper.Themes
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository

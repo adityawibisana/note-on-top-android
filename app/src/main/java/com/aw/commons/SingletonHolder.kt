@@ -1,4 +1,4 @@
-package com.aw.ontopnote.helper
+package com.aw.commons
 
 open class SingletonHolder<out T, in A>(creator: (A) -> T) {
     private var creator: ((A) -> T)? = creator
