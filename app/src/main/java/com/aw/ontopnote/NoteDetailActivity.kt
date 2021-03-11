@@ -23,7 +23,8 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.GradientDrawable 
+import android.graphics.drawable.GradientDrawable
+import com.aw.commons.AndroidUIUtils
 
 class NoteDetailActivity : BaseActivity() {
 
@@ -135,7 +136,7 @@ class NoteDetailActivity : BaseActivity() {
 
         for (b in dialog.dialog_color_root.children) {
             if (b is Button) b.setOnClickListener {
-                model.updateNote(color = CommonUtils.intToColorHex((it.background as ColorDrawable).color))
+                model.updateNote(color = AndroidUIUtils.intToColorHex((it.background as ColorDrawable).color))
                 model.uploadNote()
                 updateButtonBackground((it.background as ColorDrawable).color)
             }

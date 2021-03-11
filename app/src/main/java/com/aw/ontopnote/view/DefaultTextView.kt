@@ -1,6 +1,5 @@
 package com.aw.ontopnote.view
 
-import CommonUtils.defaultScope
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -26,7 +25,6 @@ import com.aw.ontopnote.helper.Themes
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.ViewType
-import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.Exception

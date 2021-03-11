@@ -1,12 +1,10 @@
 package com.aw.ontopnote
 
-import CommonUtils
 import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import com.aw.ontopnote.helper.UserPreferences
 import com.aw.ontopnote.model.event.NotePaddingSizeSettingChangedEvent
 import kotlinx.android.synthetic.main.activity_setting.*
