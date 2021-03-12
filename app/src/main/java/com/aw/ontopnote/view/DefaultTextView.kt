@@ -15,51 +15,37 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.drawable.DrawableCompat
-import com.aw.commons.ScopeUtils
-import com.aw.ontopnote.MainApp
+import androidx.lifecycle.LiveData
+import com.aw.commons.SingletonHolder
 import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
 import com.aw.ontopnote.helper.Constants
-import com.aw.commons.SingletonHolder
 import com.aw.ontopnote.helper.Themes
 import com.aw.ontopnote.model.Note
-import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.ViewType
-import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.Exception
 
 class DefaultTextView private constructor(context: Context) {
+
+    private lateinit var textView: TextView
 
     private val inflater:LayoutInflater by lazy {
         (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
     }
 
-    init {
-
-    }
-
     companion object : SingletonHolder<DefaultTextView, Context>(::DefaultTextView)
 
     @SuppressLint("ClickableViewAccessibility")
-    fun generateTextView(note: Note): TextView {
-        val textView = inflater.inflate(R.layout.view_default_text_view, null) as TextView
-        textView.tag = note
+    fun generateTextView(noteLiveData: LiveData<Note>): TextView {
+        textView = inflater.inflate(R.layout.view_default_text_view, null) as TextView
+        textView.tag = noteLiveData
+
+        observeAndUpdate(noteLiveData)
 
         val doubleTapListener = object : GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
             override fun onShowPress(e: MotionEvent?) { }
 
-            override fun onDown(e: MotionEvent?): Boolean {
-                //ensure we get the latest note pointer
-                ScopeUtils.db.launch {
-                    val latestNote = NoteRepository.getNoteById(MainApp.applicationContext(), note.id)
-
-                    latestNote.viewType = if (latestNote.viewType == ViewType.PARTIALLY_HIDDEN) ViewType.VISIBLE else ViewType.PARTIALLY_HIDDEN
-                    NoteRepository.updateNote(MainApp.applicationContext(), latestNote)
-                }
-                return true
-            }
-
+            override fun onDown(e: MotionEvent?): Boolean { return false }
 
             override fun onSingleTapUp(e: MotionEvent?): Boolean = false
 
@@ -68,6 +54,10 @@ class DefaultTextView private constructor(context: Context) {
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean = false
 
             override fun onLongPress(e: MotionEvent?) {
+                val note = noteLiveData.value
+                note ?: return
+
+
                 val intent = Intent(textView.context, NoteDetailActivity::class.java)
                 intent.addCategory(Intent.CATEGORY_HOME)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -90,10 +80,10 @@ class DefaultTextView private constructor(context: Context) {
             false
         }
 
-        return decorateTextView(textView, note)
+        return textView
     }
 
-    fun decorateTextView (textView: TextView, note: Note) : TextView {
+    private fun decorateTextView (textView: TextView, note: Note) : TextView {
         Timber.v("note.viewType:${note.viewType}")
 
         when (note.viewType) {
@@ -140,5 +130,11 @@ class DefaultTextView private constructor(context: Context) {
         textView.setPadding(0, paddingSize, paddingSize, paddingSize)
 
         return textView
+    }
+
+    private fun observeAndUpdate(noteLiveData: LiveData<Note>) {
+        noteLiveData.observeForever {
+            decorateTextView(textView, it)
+        }
     }
 }

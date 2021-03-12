@@ -6,13 +6,10 @@ import android.os.Build
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.TextView
-import com.aw.ontopnote.event.LastEditedNoteChanged
+import androidx.lifecycle.LiveData
 import com.aw.ontopnote.model.Note
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
-class ViewManager(private val context: Context, private val windowManager: WindowManager) {
+class ViewManager(private val context: Context, private val windowManager: WindowManager, initialNoteLiveData: LiveData<Note>?) {
 
     private val defaultTextView: DefaultTextView by lazy {
         DefaultTextView.getInstance(context)
@@ -38,39 +35,14 @@ class ViewManager(private val context: Context, private val windowManager: Windo
 
     init {
         mLayoutParams.gravity = Gravity.START or Gravity.TOP
-        EventBus.getDefault().register(this)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLastEditedNoteChanged(lastEditedNoteChanged: LastEditedNoteChanged) {
-        val note = lastEditedNoteChanged.note
-        if (textViews.size == 0) {
-            addTextViewToWindowManager(note)
-        } else {
-            val found = textViews.find {
-                (it.tag as Note).id == note.id
-            }
-
-            if (found == null) {
-                //  remove all of oldview
-                for (textView in textViews) {
-                    windowManager.removeView(textView)
-                }
-
-                addTextViewToWindowManager(note)
-            } else {
-                windowManager.updateViewLayout(
-                    defaultTextView.decorateTextView(found, note),
-                    mLayoutParams
-                )
-            }
+        initialNoteLiveData?.run {
+            addTextViewToWindowManager(this)
         }
     }
 
-    private fun addTextViewToWindowManager(note: Note) {
-        val textView = defaultTextView.generateTextView(note)
+    private fun addTextViewToWindowManager(noteLiveData: LiveData<Note>) {
+        val textView = defaultTextView.generateTextView(noteLiveData)
         windowManager.addView(textView, mLayoutParams)
         textViews.add(textView)
     }
-
 }
