@@ -8,7 +8,6 @@ import android.view.WindowManager
 import com.aw.commons.ScopeUtils
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.view.ViewManager
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
 class MainService : Service() {
@@ -19,7 +18,7 @@ class MainService : Service() {
 
         ScopeUtils.db.launch {
             val lastEditedNote = NoteRepository.getLastEditedNoteLive(MainApp.applicationContext())
-            launch(Main) {
+            ScopeUtils.ui.launch {
                 viewManager = ViewManager(this@MainService, getSystemService(Context.WINDOW_SERVICE) as WindowManager, lastEditedNote)
             }
         }
