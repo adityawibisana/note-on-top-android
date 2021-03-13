@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.util.SharedPref
 import com.jakewharton.processphoenix.ProcessPhoenix
@@ -45,7 +46,7 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope {
             SharedPref.isFirstTimeOpenApp = false
             showPermissionOrProceedToApp()
         } else {
-            startService(Intent(applicationContext, MainService::class.java))
+            ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, MainService::class.java))
         }
     }
 
@@ -60,7 +61,7 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope {
             if (!Utils.canDrawOverlays(this)) {
                 ProcessPhoenix.triggerRebirth(applicationContext, Intent(applicationContext, MainActivity::class.java))
             } else {
-                startService(Intent(applicationContext, MainService::class.java))
+                ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, MainService::class.java))
             }
         }
     }
@@ -73,7 +74,7 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope {
     private fun showPermissionOrProceedToApp() {
         launch (Default) {
             if (Utils.canDrawOverlays(this@BaseActivity)) {
-                startService(Intent(applicationContext, MainService::class.java))
+                ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, MainService::class.java))
             } else {
                 launch (Main) {
                     Toast.makeText(this@BaseActivity, R.string.allow_draw_over_other_app_permission, Toast.LENGTH_LONG).show()
