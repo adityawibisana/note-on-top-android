@@ -26,6 +26,7 @@ class MainService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        viewManager.removeAll()
     }
 
     override fun onBind(p0: Intent?): IBinder? {

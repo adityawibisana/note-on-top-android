@@ -45,4 +45,10 @@ class ViewManager(private val context: Context, private val windowManager: Windo
         windowManager.addView(textView, mLayoutParams)
         textViews.add(textView)
     }
+
+    fun removeAll() {
+        textViews.forEach {
+            windowManager.removeView(it)
+        }
+    }
 }
