@@ -60,6 +60,7 @@ class MainService : Service() {
             channelName, NotificationManager.IMPORTANCE_DEFAULT)
         chan.lightColor = Color.BLUE
         chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+        chan.setShowBadge(false)
         val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         service.createNotificationChannel(chan)
         return channelId
