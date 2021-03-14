@@ -8,10 +8,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.TypedValue
-import android.view.GestureDetector
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.drawable.DrawableCompat
@@ -19,10 +16,12 @@ import androidx.lifecycle.LiveData
 import com.aw.commons.SingletonHolder
 import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
+import com.aw.ontopnote.event.WindowManagerLayoutParamsChanged
 import com.aw.ontopnote.helper.Constants
 import com.aw.ontopnote.helper.Themes
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.ViewType
+import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 
 class DefaultTextView private constructor(context: Context) {
@@ -42,21 +41,38 @@ class DefaultTextView private constructor(context: Context) {
 
         observeAndUpdate(noteLiveData)
 
-        val doubleTapListener = object : GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+        val gestureListener = object : GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
             override fun onShowPress(e: MotionEvent?) { }
-
-            override fun onDown(e: MotionEvent?): Boolean { return false }
-
+            override fun onDown(e: MotionEvent?): Boolean = false
             override fun onSingleTapUp(e: MotionEvent?): Boolean = false
+            override fun onDoubleTap(e: MotionEvent?): Boolean = false
+            override fun onDoubleTapEvent(e: MotionEvent?): Boolean = false
+            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean = false
 
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean = false
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+                Timber.v("onFling ${e1?.action} ${e2?.action} vX:${velocityX} vY:${velocityY}")
+
+                val currentLayoutParams = textView.layoutParams as WindowManager.LayoutParams
+                val newGravity =
+                    if (currentLayoutParams.gravity == Gravity.TOP or Gravity.START or Gravity.CENTER) {
+                        Gravity.BOTTOM or Gravity.START
+                    } else {
+                        Gravity.TOP or Gravity.START or Gravity.CENTER
+                    }
+
+                val newLayoutParams = ViewHelper.defaultTextViewLayoutParams
+                newLayoutParams.apply {
+                    gravity = newGravity
+                }
+                EventBus.getDefault().post(WindowManagerLayoutParamsChanged(textView, newLayoutParams))
+                return true
+            }
 
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean = false
 
             override fun onLongPress(e: MotionEvent?) {
                 val note = noteLiveData.value
                 note ?: return
-
 
                 val intent = Intent(textView.context, NoteDetailActivity::class.java)
                 intent.addCategory(Intent.CATEGORY_HOME)
@@ -66,20 +82,14 @@ class DefaultTextView private constructor(context: Context) {
                 textView.context.startActivity(intent)
                 Toast.makeText(textView.context, R.string.pending_wait_note_detail, Toast.LENGTH_LONG).show()
             }
-
-            override fun onDoubleTap(e: MotionEvent?): Boolean = false
-            override fun onDoubleTapEvent(e: MotionEvent?): Boolean = false
-            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean = false
         }
 
-        val gestureDetector = GestureDetector(textView.context, doubleTapListener)
+        val gestureDetector = GestureDetector(textView.context, gestureListener)
 
         textView.setOnTouchListener { _, event ->
-            // TODO Auto-generated method stub
             gestureDetector.onTouchEvent(event)
-            false
+            true
         }
-
         return textView
     }
 

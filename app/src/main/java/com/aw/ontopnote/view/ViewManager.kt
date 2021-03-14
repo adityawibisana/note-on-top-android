@@ -4,7 +4,11 @@ import android.content.Context
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.lifecycle.LiveData
+import com.aw.ontopnote.event.WindowManagerLayoutParamsChanged
 import com.aw.ontopnote.model.Note
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class ViewManager(private val context: Context, private val windowManager: WindowManager, initialNoteLiveData: LiveData<Note>?) {
 
@@ -15,6 +19,7 @@ class ViewManager(private val context: Context, private val windowManager: Windo
     private val textViews = ArrayList<TextView>()
 
     init {
+        EventBus.getDefault().register(this)
         initialNoteLiveData?.run {
             addTextViewToWindowManager(this)
         }
@@ -30,5 +35,10 @@ class ViewManager(private val context: Context, private val windowManager: Windo
         textViews.forEach {
             windowManager.removeView(it)
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onViewWindowManagerLayoutChanged(event: WindowManagerLayoutParamsChanged) {
+        windowManager.updateViewLayout(event.view, event.layoutParams)
     }
 }
