@@ -16,6 +16,7 @@ import androidx.lifecycle.LiveData
 import com.aw.commons.SingletonHolder
 import com.aw.ontopnote.NoteDetailActivity
 import com.aw.ontopnote.R
+import com.aw.ontopnote.event.MenuVisibilityChanged
 import com.aw.ontopnote.event.WindowManagerLayoutParamsChanged
 import com.aw.ontopnote.helper.Constants
 import com.aw.ontopnote.helper.Themes
@@ -43,11 +44,16 @@ class DefaultTextView private constructor(context: Context) {
 
         val gestureListener = object : GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
             override fun onShowPress(e: MotionEvent?) { }
-            override fun onDown(e: MotionEvent?): Boolean = false
             override fun onSingleTapUp(e: MotionEvent?): Boolean = false
             override fun onDoubleTap(e: MotionEvent?): Boolean = false
             override fun onDoubleTapEvent(e: MotionEvent?): Boolean = false
             override fun onSingleTapConfirmed(e: MotionEvent?): Boolean = false
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean = false
+
+            override fun onDown(e: MotionEvent?): Boolean {
+                EventBus.getDefault().post(MenuVisibilityChanged())
+                return false
+            }
 
             override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
                 Timber.v("onFling ${e1?.action} ${e2?.action} vX:${velocityX} vY:${velocityY}")
@@ -67,8 +73,6 @@ class DefaultTextView private constructor(context: Context) {
                 EventBus.getDefault().post(WindowManagerLayoutParamsChanged(textView, newLayoutParams))
                 return true
             }
-
-            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean = false
 
             override fun onLongPress(e: MotionEvent?) {
                 val note = noteLiveData.value
