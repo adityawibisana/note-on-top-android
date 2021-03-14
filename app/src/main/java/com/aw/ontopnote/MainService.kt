@@ -12,6 +12,7 @@ import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import com.aw.commons.ScopeUtils
 import com.aw.ontopnote.model.NoteRepository
+import com.aw.commons.AndroidUIHelper
 import com.aw.ontopnote.view.ViewManager
 import kotlinx.coroutines.launch
 
@@ -25,6 +26,9 @@ class MainService : Service() {
     override fun onCreate() {
         super.onCreate()
         startForeground(ID, getNotification())
+
+        // initialize uihelper
+        AndroidUIHelper.getInstance(this)
 
         ScopeUtils.db.launch {
             val lastEditedNote = NoteRepository.getLastEditedNoteLive(MainApp.applicationContext())
