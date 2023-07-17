@@ -18,15 +18,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.aw.ontopnote.model.ViewType
 import com.aw.commons.AndroidUIHelper
+import com.aw.ontopnote.databinding.ActivityNoteDetailBinding
+import com.aw.ontopnote.databinding.DialogColorBinding
 import com.aw.ontopnote.viewmodel.NoteDetailViewModel
-import kotlinx.android.synthetic.main.activity_note_detail.*
-import kotlinx.android.synthetic.main.dialog_color.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class NoteDetailActivity : BaseActivity() {
+    lateinit var binding: ActivityNoteDetailBinding
+    lateinit var dialogColorBinding: DialogColorBinding
 
     companion object {
         const val EXTRA_NOTE_ID = "extraNoteId"
@@ -78,9 +80,11 @@ class NoteDetailActivity : BaseActivity() {
     }
 
     private val dialog: AlertDialog by lazy {
+        dialogColorBinding = DialogColorBinding.inflate(layoutInflater)
+
         AlertDialog.Builder(this)
             .setTitle(R.string.pick_color)
-            .setView(R.layout.dialog_color)
+            .setView(dialogColorBinding.root)
             .setPositiveButton(R.string.ok) { dialog, _ ->
                 dialog.dismiss()
             }
@@ -89,7 +93,9 @@ class NoteDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_note_detail)
+
+        binding = ActivityNoteDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val noteId = intent.getStringExtra(EXTRA_NOTE_ID)
         model.initialize(noteId!!)
@@ -97,17 +103,17 @@ class NoteDetailActivity : BaseActivity() {
             Timber.v( "Live note is updated")
             pauseWatcher = true
 
-            et_note.setText(it.text)
-            sb_font_size.progress = it.fontSize
-            tb_always_show.isChecked = it.viewType != ViewType.GONE
+            binding.etNote.setText(it.text)
+            binding.sbFontSize.progress = it.fontSize
+            binding.tbAlwaysShow.isChecked = it.viewType != ViewType.GONE
             updateButtonBackground(Color.parseColor(it.color))
 
             pauseWatcher = false
         })
 
-        et_note.addTextChangedListener(textWatcher)
-        sb_font_size.setOnSeekBarChangeListener(seekBarFontSizeChangeListener)
-        tb_always_show.setOnCheckedChangeListener(onStickyNoteChangedListener)
+        binding.etNote.addTextChangedListener(textWatcher)
+        binding.sbFontSize.setOnSeekBarChangeListener(seekBarFontSizeChangeListener)
+        binding.tbAlwaysShow.setOnCheckedChangeListener(onStickyNoteChangedListener)
     }
 
     override fun onResume() {
@@ -115,9 +121,9 @@ class NoteDetailActivity : BaseActivity() {
         launch (Default) {
             val note = model.getNoteValue()
             launch (Main) {
-                et_note.setText(note.text)
-                sb_font_size.progress = note.fontSize
-                tb_always_show.isChecked = note.viewType != ViewType.GONE
+                binding.etNote.setText(note.text)
+                binding.sbFontSize.progress = note.fontSize
+                binding.tbAlwaysShow.isChecked = note.viewType != ViewType.GONE
                 updateButtonBackground(Color.parseColor(note.color))
                 pauseWatcher = false
             }
@@ -134,7 +140,7 @@ class NoteDetailActivity : BaseActivity() {
             dialog.show()
         }
 
-        for (b in dialog.dialog_color_root.children) {
+        for (b in dialogColorBinding.root.children) {
             if (b is Button) b.setOnClickListener {
                 model.updateNote(color = AndroidUIHelper.getInstance(MainApp.applicationContext()).intToColorHex((it.background as ColorDrawable).color))
                 model.uploadNote()
@@ -149,7 +155,7 @@ class NoteDetailActivity : BaseActivity() {
     }
 
     fun updateButtonBackground(color: Int) {
-        val background = bt_switch_color.background
+        val background = binding.btSwitchColor.background
         if (background is ShapeDrawable) {
             background.paint.color = color
         } else if (background is GradientDrawable) {

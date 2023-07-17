@@ -43,20 +43,20 @@ class DefaultTextView private constructor(context: Context) {
         observeAndUpdate(noteLiveData)
 
         val gestureListener = object : GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
-            override fun onShowPress(e: MotionEvent?) { }
-            override fun onSingleTapUp(e: MotionEvent?): Boolean = false
-            override fun onDoubleTap(e: MotionEvent?): Boolean = false
-            override fun onDoubleTapEvent(e: MotionEvent?): Boolean = false
-            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean = false
-            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean = false
+            override fun onShowPress(e: MotionEvent) { }
+            override fun onSingleTapUp(e: MotionEvent): Boolean = false
+            override fun onDoubleTap(e: MotionEvent): Boolean = false
+            override fun onDoubleTapEvent(e: MotionEvent): Boolean = false
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean = false
+            override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean = false
 
-            override fun onDown(e: MotionEvent?): Boolean {
+            override fun onDown(e: MotionEvent): Boolean {
                 EventBus.getDefault().post(MenuVisibilityChanged())
                 return false
             }
 
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-                Timber.v("onFling ${e1?.action} ${e2?.action} vX:${velocityX} vY:${velocityY}")
+            override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+                Timber.v("onFling ${e1.action} ${e2.action} vX:${velocityX} vY:${velocityY}")
 
                 val currentLayoutParams = textView.layoutParams as WindowManager.LayoutParams
                 val newGravity =
@@ -74,7 +74,7 @@ class DefaultTextView private constructor(context: Context) {
                 return true
             }
 
-            override fun onLongPress(e: MotionEvent?) {
+            override fun onLongPress(e: MotionEvent) {
                 val note = noteLiveData.value
                 note ?: return
 

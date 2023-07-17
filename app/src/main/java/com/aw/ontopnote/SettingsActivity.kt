@@ -5,15 +5,16 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.aw.ontopnote.databinding.ActivitySettingBinding
 import com.aw.ontopnote.helper.UserPreferences
 import com.aw.ontopnote.model.event.NotePaddingSizeSettingChangedEvent
-import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 class SettingsActivity : BaseActivity() {
+    lateinit var binding: ActivitySettingBinding
 
     private val dialog: AlertDialog by lazy {
         AlertDialog.Builder(this)
@@ -35,9 +36,11 @@ class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setting)
 
-        tv_padding_size.text = "${UserPreferences.getNotePaddingSize()}"
+        binding = ActivitySettingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.tvPaddingSize.text = "${UserPreferences.getNotePaddingSize()}"
     }
 
     fun showSeekBarDialog(v: View) {

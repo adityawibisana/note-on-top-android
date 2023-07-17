@@ -8,8 +8,8 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.DrawableCompat
+import com.aw.ontopnote.databinding.ViewMainBinding
 import com.aw.ontopnote.model.event.UpdateNoteEvent
-import kotlinx.android.synthetic.main.view_main.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -18,14 +18,16 @@ import timber.log.Timber
 
 class MainView(context: Context) : RelativeLayout(context) {
 
+    lateinit var binding: ViewMainBinding
 
     private var isExpanded = true
     private var lastClickTimeStamp = 0.toLong()
 
     init {
-        (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_main, this)
+        val layoutInflater = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
+        binding = ViewMainBinding.inflate(layoutInflater)
 
-        text_to_show.setOnClickListener {
+        binding.textToShow.setOnClickListener {
             switchTextPosition()
 
             if (isDoubleClick(System.currentTimeMillis() ,lastClickTimeStamp)) {
@@ -47,9 +49,9 @@ class MainView(context: Context) : RelativeLayout(context) {
     @SuppressLint("ResourceType")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: UpdateNoteEvent) {
-        text_to_show.text = event.note.text
+        binding.textToShow.text = event.note.text
         DrawableCompat.setTint(
-            text_to_show.background,
+            binding.textToShow.background,
             Color.parseColor(event.note.color)
         )
 
@@ -62,9 +64,9 @@ class MainView(context: Context) : RelativeLayout(context) {
 
     private fun switchTextPosition() {
         isExpanded = !isExpanded
-        val targetX = if (isExpanded) 0.0f else -1 * text_to_show.width + 35.0f
+        val targetX = if (isExpanded) 0.0f else -1 * binding.textToShow.width + 35.0f
 
-        ObjectAnimator.ofFloat(text_to_show, "translationX", targetX).apply {
+        ObjectAnimator.ofFloat(binding.textToShow, "translationX", targetX).apply {
             duration = 300
             start()
         }
