@@ -45,17 +45,43 @@ class DefaultTextView private constructor(context: Context) {
         val gestureListener = object : GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
             override fun onShowPress(e: MotionEvent) { }
             override fun onSingleTapUp(e: MotionEvent): Boolean = false
+            override fun onScroll(
+                e1: MotionEvent?,
+                e2: MotionEvent,
+                distanceX: Float,
+                distanceY: Float
+            ) : Boolean = false
+
             override fun onDoubleTap(e: MotionEvent): Boolean = false
             override fun onDoubleTapEvent(e: MotionEvent): Boolean = false
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean = false
-            override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean = false
 
             override fun onDown(e: MotionEvent): Boolean {
                 EventBus.getDefault().post(MenuVisibilityChanged())
                 return false
             }
 
-            override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+            override fun onLongPress(e: MotionEvent) {
+                val note = noteLiveData.value
+                note ?: return
+
+                val intent = Intent(textView.context, NoteDetailActivity::class.java)
+                intent.addCategory(Intent.CATEGORY_HOME)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, note.id)
+
+                textView.context.startActivity(intent)
+                Toast.makeText(textView.context, R.string.pending_wait_note_detail, Toast.LENGTH_LONG).show()
+            }
+
+            override fun onFling(
+                e1: MotionEvent?,
+                e2: MotionEvent,
+                velocityX: Float,
+                velocityY: Float
+            ): Boolean {
+                e1 ?: return false
+
                 Timber.v("onFling ${e1.action} ${e2.action} vX:${velocityX} vY:${velocityY}")
 
                 val currentLayoutParams = textView.layoutParams as WindowManager.LayoutParams
@@ -72,19 +98,6 @@ class DefaultTextView private constructor(context: Context) {
                 }
                 EventBus.getDefault().post(WindowManagerLayoutParamsChanged(textView, newLayoutParams))
                 return true
-            }
-
-            override fun onLongPress(e: MotionEvent) {
-                val note = noteLiveData.value
-                note ?: return
-
-                val intent = Intent(textView.context, NoteDetailActivity::class.java)
-                intent.addCategory(Intent.CATEGORY_HOME)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, note.id)
-
-                textView.context.startActivity(intent)
-                Toast.makeText(textView.context, R.string.pending_wait_note_detail, Toast.LENGTH_LONG).show()
             }
         }
 
