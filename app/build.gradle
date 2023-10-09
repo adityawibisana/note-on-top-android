@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.dagger.hilt.android'
 
 android {
     compileSdkVersion 34
@@ -64,6 +65,9 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    implementation "com.google.dagger:hilt-android:2.46.1"
+    kapt "com.google.dagger:hilt-compiler:2.46.1"
 
     // Core library
     androidTestImplementation "androidx.test:core:$test_version"
