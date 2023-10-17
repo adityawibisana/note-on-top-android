@@ -37,7 +37,7 @@ open class BaseActivity : AppCompatActivity() {
             SharedPref.isFirstTimeOpenApp = false
             showPermissionOrProceedToApp()
         } else {
-            ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, MainService::class.java))
+            startService(Intent(applicationContext, MainService::class.java))
         }
     }
 
@@ -52,7 +52,7 @@ open class BaseActivity : AppCompatActivity() {
             if (!Utils.canDrawOverlays(this)) {
                 ProcessPhoenix.triggerRebirth(applicationContext, Intent(applicationContext, MainActivity::class.java))
             } else {
-                ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, MainService::class.java))
+                startService(Intent(applicationContext, MainService::class.java))
             }
         }
     }
@@ -60,7 +60,7 @@ open class BaseActivity : AppCompatActivity() {
     private fun showPermissionOrProceedToApp() {
         lifecycleScope.launch (Default) {
             if (Utils.canDrawOverlays(this@BaseActivity)) {
-                ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, MainService::class.java))
+                startService(Intent(applicationContext, MainService::class.java))
             } else {
                 launch (Main) {
                     Toast.makeText(this@BaseActivity, R.string.allow_draw_over_other_app_permission, Toast.LENGTH_LONG).show()
