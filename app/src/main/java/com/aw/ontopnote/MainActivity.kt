@@ -5,9 +5,11 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import com.aw.ontopnote.viewmodel.MainActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
     private val model: MainActivityViewModel by lazy {

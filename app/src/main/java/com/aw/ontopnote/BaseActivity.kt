@@ -12,10 +12,12 @@ import androidx.lifecycle.lifecycleScope
 import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.util.SharedPref
 import com.jakewharton.processphoenix.ProcessPhoenix
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 @SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity() {
     var isPaused = false
