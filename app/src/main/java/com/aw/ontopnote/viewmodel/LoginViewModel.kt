@@ -1,6 +1,7 @@
 package com.aw.ontopnote.viewmodel
 
 import android.os.Build
+import androidx.lifecycle.ViewModel
 import com.aw.ontopnote.MainApp
 import com.aw.ontopnote.R
 import com.aw.ontopnote.model.Note
@@ -13,7 +14,7 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class LoginViewModel : BaseViewModel() {
+class LoginViewModel : ViewModel() {
     suspend fun signUp(email: String, password: String) : String? = withContext(Default) {
         try {
             val userReq = Service.onTopNoteService.signUp(email, password).execute()

@@ -12,16 +12,14 @@ import com.aw.ontopnote.network.SocketDataSource
 import com.aw.ontopnote.network.SocketManager
 import com.aw.ontopnote.util.SharedPref
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import kotlin.coroutines.CoroutineContext
 
-class NoteDetailViewModel : BaseViewModel() {
+class NoteDetailViewModel : ViewModel() {
     lateinit var note: Note
 
     var noteId: String = ""
@@ -33,9 +31,11 @@ class NoteDetailViewModel : BaseViewModel() {
     val liveNote: LiveData<Note>
     get () = mLiveNote
 
+    val scope = CoroutineScope(Job())
+
     fun initialize(noteId: String) {
         this.noteId = noteId
-        launch (Default) {
+        scope.launch (Default) {
             note = NoteRepository.getNoteById(MainApp.applicationContext(), noteId)
 
             if (SharedPref.token != null) {
@@ -52,7 +52,7 @@ class NoteDetailViewModel : BaseViewModel() {
     }
 
     fun updateNote(fontSize: Int? = null, viewType: Int? = null, color: String? = null, text: String? = null) {
-        launch (Default) {
+        scope.launch (Default) {
             if (::note.isInitialized) {
                 if (fontSize != null) {
                     note.fontSize = fontSize
@@ -73,7 +73,7 @@ class NoteDetailViewModel : BaseViewModel() {
     }
 
     fun uploadNote() {
-        launch (Default) {
+        scope.launch (Default) {
             if (SharedPref.token != null) {
                 if (note.remoteId == "") {
                     note = SocketDBRepository.createNote(note)
