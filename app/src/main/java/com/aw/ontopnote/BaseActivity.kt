@@ -8,33 +8,24 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.aw.ontopnote.helper.Utils
 import com.aw.ontopnote.util.SharedPref
 import com.jakewharton.processphoenix.ProcessPhoenix
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 @SuppressLint("Registered")
-open class BaseActivity : AppCompatActivity(), CoroutineScope {
+open class BaseActivity : AppCompatActivity() {
     var isPaused = false
 
     companion object {
         const val REQUEST_CODE = 1
     }
 
-    private val job: Job by lazy { Job() }
-
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         supportActionBar?.hide()
     }
 
@@ -66,13 +57,8 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
-    }
-
     private fun showPermissionOrProceedToApp() {
-        launch (Default) {
+        lifecycleScope.launch (Default) {
             if (Utils.canDrawOverlays(this@BaseActivity)) {
                 ContextCompat.startForegroundService(applicationContext, Intent(applicationContext, MainService::class.java))
             } else {

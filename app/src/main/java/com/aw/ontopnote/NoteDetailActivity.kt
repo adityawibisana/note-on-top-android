@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import com.aw.ontopnote.model.ViewType
 import com.aw.commons.AndroidUIHelper
 import com.aw.ontopnote.databinding.ActivityNoteDetailBinding
@@ -118,7 +119,7 @@ class NoteDetailActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        launch (Default) {
+        lifecycleScope.launch (Default) {
             val note = model.getNoteValue()
             launch (Main) {
                 binding.etNote.setText(note.text)

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import com.aw.ontopnote.databinding.ActivityLoginBinding
 import com.aw.ontopnote.util.SharedPref
 import com.aw.ontopnote.viewmodel.LoginViewModel
@@ -32,7 +33,7 @@ class LoginActivity : BaseActivity() {
     }
 
     fun onRegisterClicked(view: View) {
-        launch (Default) {
+        lifecycleScope.launch (Default) {
             val errorMessage = model.signUp(binding.etEmail.text.toString(), binding.etPassword.text.toString())
             launch (Main) {
                 if (errorMessage != null) {
@@ -43,7 +44,7 @@ class LoginActivity : BaseActivity() {
     }
 
     fun onLoginClicked(view: View) {
-        launch (Default) {
+        lifecycleScope.launch (Default) {
             val errorMessage = model.login(binding.etEmail.text.toString(), binding.etPassword.text.toString())
 
             if (errorMessage == null) {
@@ -60,13 +61,13 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun showDefaultErrorToast(message: String) {
-        launch (Main) {
+        lifecycleScope.launch (Main) {
             Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun goToNoteActivity() {
-        launch (Main) {
+        lifecycleScope.launch (Main) {
             val intent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(intent)
             finishAffinity()
@@ -74,7 +75,7 @@ class LoginActivity : BaseActivity() {
     }
 
     fun goToNoteDetailActivity(noteId: String) {
-        launch (Main) {
+        lifecycleScope.launch (Main) {
             val intent = Intent(this@LoginActivity, NoteDetailActivity::class.java)
             intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, noteId)
             startActivity(intent)

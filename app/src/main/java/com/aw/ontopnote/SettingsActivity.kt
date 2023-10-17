@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.aw.ontopnote.databinding.ActivitySettingBinding
 import com.aw.ontopnote.helper.UserPreferences
 import com.aw.ontopnote.model.event.NotePaddingSizeSettingChangedEvent
@@ -53,7 +54,7 @@ class SettingsActivity : BaseActivity() {
         seekBar?.max = 24
         seekBar?.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
-                launch (Default) {
+                lifecycleScope.launch (Default) {
                     launch (Main) {
                         tvSeekBar?.text = "$progress"
                     }

@@ -3,6 +3,7 @@ package com.aw.ontopnote
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import com.aw.ontopnote.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
@@ -16,7 +17,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        launch (Default) {
+        lifecycleScope.launch (Default) {
             goToNoteDetail(model.getLastEditedNote()!!.id)
             finishAffinity()
         }
