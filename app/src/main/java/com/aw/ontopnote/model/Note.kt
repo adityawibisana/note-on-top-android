@@ -1,12 +1,9 @@
 package com.aw.ontopnote.model
 
 import androidx.annotation.NonNull
-import androidx.core.content.ContextCompat
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.aw.ontopnote.MainApp
-import com.aw.ontopnote.R
 import com.aw.ontopnote.helper.Themes
 import com.aw.ontopnote.model.ViewType.Companion.VISIBLE
 import com.google.gson.annotations.SerializedName

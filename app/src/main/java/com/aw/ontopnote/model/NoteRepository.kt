@@ -17,15 +17,6 @@ object NoteRepository {
         return note
     }
 
-    fun getOrCreateFirstNote(context: Context) : Note {
-        val noteDao = NotesDatabase.getInstance(context).noteDao()
-
-        if (noteDao.count() == 0) {
-            noteDao.insertNote(Note(text = context.getString(R.string.input_note_here)))
-        }
-        return noteDao.getFirstNote()
-    }
-
     fun getNoteById(context: Context, id: String) : Note {
         val noteDao = NotesDatabase.getInstance(context).noteDao()
         return noteDao.getNoteById(id)

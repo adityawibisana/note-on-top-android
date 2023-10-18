@@ -3,6 +3,8 @@ package com.aw.ontopnote
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.platform.app.InstrumentationRegistry
 import com.aw.ontopnote.model.NoteRepository
+import com.aw.ontopnote.model.NotesDatabase
+import com.aw.ontopnote.usecase.GetLastEditedNoteImp
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,7 +25,7 @@ class DBInstrumentedTest {
 
     @Test
     fun getFirstNote() {
-        val firstNote = NoteRepository.getOrCreateFirstNote(appContext)
+        val firstNote = GetLastEditedNoteImp(NotesDatabase.getInstance(appContext).noteDao()).invoke()
         val getNoteId  = NoteRepository.getNoteById(appContext, firstNote.id)
         Assert.assertEquals(firstNote.id, getNoteId.id)
     }

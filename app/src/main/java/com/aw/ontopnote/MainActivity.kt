@@ -2,25 +2,20 @@ package com.aw.ontopnote
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.lifecycleScope
+import androidx.activity.viewModels
 import com.aw.ontopnote.viewmodel.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
-    private val model: MainActivityViewModel by lazy {
-        ViewModelProviders.of(this@MainActivity)[MainActivityViewModel::class.java]
-    }
+    private val model: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch (Default) {
-            goToNoteDetail(model.getLastEditedNote()!!.id)
+        model.lastEditedNote.observe(this) {
+            goToNoteDetail(it.id)
             finishAffinity()
         }
 

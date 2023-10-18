@@ -4,6 +4,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.aw.ontopnote.model.Note
 import com.aw.ontopnote.model.NoteRepository
 import com.aw.ontopnote.model.NotesDatabase
+import com.aw.ontopnote.usecase.GetLastEditedNoteImp
 import junit.framework.Assert.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class DaoTest {
     fun insert() {
         runBlocking {
             launch (Default) {
-                val firstNote = NoteRepository.getOrCreateFirstNote(context)
+                val firstNote = GetLastEditedNoteImp(NotesDatabase.getInstance(context).noteDao()).invoke()
                 assertNotNull(firstNote)
 
                 val firstNoteDB = NoteRepository.getNoteById(context, firstNote.id)
@@ -59,7 +60,7 @@ class DaoTest {
         runBlocking {
             launch (Default) {
                 val updatedText = "Note is Updated"
-                val note = NoteRepository.getOrCreateFirstNote(context)
+                val note = GetLastEditedNoteImp(NotesDatabase.getInstance(context).noteDao()).invoke()
                 note.text = updatedText
                 NoteRepository.updateNote(context, note)
 
