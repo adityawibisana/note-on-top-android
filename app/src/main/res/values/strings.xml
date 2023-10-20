@@ -18,4 +18,11 @@
     <string name="register">Sign up</string>
     <string name="signup_error">Sign up error: %1$s</string>
     <string name="login_error">Login error: %1$s</string>
+    <string name="tip_home">Tip: Press home, app will stay. Open this app again, and press exit to… Exit. </string>
+    <string name="exit">Exit</string>
+    <string name="allow_display_over_app_permission">Permission is required to display your note anywhere, which is the main feature of our app. Would you like to grant us permission?</string>
+    <string name="allow_permission_confirmation">Do you want to give us permission?</string>
+    <string name="allow_permission">Allow Permission</string>
+    <string name="allow">Allow</string>
+    <string name="dismiss">Dismiss</string>
 </resources>
